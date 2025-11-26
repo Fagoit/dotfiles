@@ -1,5 +1,8 @@
 @import "../../../../current/theme/walker.css";
 
+@define-color error_bg_color #C34043;
+@define-color error_fg_color #DCD7BA;
+
 * {
   all: unset;
 }
@@ -20,20 +23,19 @@ scrollbar {
   box-shadow:
     0 19px 38px rgba(0, 0, 0, 0.3),
     0 15px 12px rgba(0, 0, 0, 0.22);
-  background: alpha(@background, 0.8);
+  background: alpha(@background, 0.9);
   padding: 20px;
   border-radius: 20px;
-  border: 1.5px solid @border;
+  border: 1.2px solid darker(@border);
 }
 
 .preview-box,
 .elephant-hint,
 .placeholder {
-  color: @text;
+  color: @foreground;
 }
 
-.box {
-}
+.box {}
 
 .search-container {
   border-radius: 10px;
@@ -43,31 +45,31 @@ scrollbar {
   opacity: 0.5;
 }
 
+.input selection {
+  background: lighter(lighter(lighter(@background)));
+}
+
 .input {
-  caret-color: @selected-text;
-  background: darker(alpha(@background, 0.5));
+  caret-color: @foreground;
+  background: darker(alpha(@background, 0.8));
   padding: 10px;
+  color: @foreground;
 }
 
 .input:focus,
-.input:active {
-}
+.input:active {}
 
-.content-container {
-}
+.content-container {}
 
-.placeholder {
-}
+.placeholder {}
 
-.scroll {
-}
+.scroll {}
 
 .list {
-  color: @text;
+  color: @foreground;
 }
 
-child {
-}
+child {}
 
 .item-box {
   border-radius: 10px;
@@ -75,31 +77,26 @@ child {
 }
 
 .item-quick-activation {
-  margin-left: 10px;
   background: alpha(@background, 0.25);
   border-radius: 5px;
   padding: 10px;
 }
 
-child:hover .item-box,
+/* child:hover .item-box, */
 child:selected .item-box {
-  background: darker(alpha(@background, 0.5));
+  background: darker(alpha(@background, 0.6));
 }
 
-.item-text-box {
-}
-
-.item-text {
-}
+.item-text-box {}
 
 .item-subtext {
   font-size: 12px;
   opacity: 0.5;
 }
 
-.item-image,
-.item-image-text {
-  margin-right: 10px;
+.providerlist .item-subtext {
+  font-size: unset;
+  opacity: 0.75;
 }
 
 .item-image-text {
@@ -108,7 +105,7 @@ child:selected .item-box {
 
 .preview {
   border: 1px solid alpha(@background, 0.25);
-  padding: 10px;
+  /* padding: 10px; */
   border-radius: 10px;
   color: @foreground;
 }
@@ -117,8 +114,7 @@ child:selected .item-box {
   font-size: 24px;
 }
 
-.calc .item-subtext {
-}
+.calc .item-subtext {}
 
 .symbols .item-image {
   font-size: 24px;
@@ -144,23 +140,43 @@ child:selected .item-box {
   -gtk-icon-size: 64px;
 }
 
-.keybinds-wrapper {
-  border-top: 1px solid darker(@border);
+.keybinds {
+  padding-top: 10px;
+  border-top: 1px solid lighter(@background);
   font-size: 12px;
-  opacity: 0.5;
   color: @foreground;
 }
 
-.keybinds {
+.global-keybinds {}
+
+.item-keybinds {}
+
+.keybind {}
+
+.keybind-button {
+  opacity: 0.5;
 }
 
-.keybind {
+.keybind-button:hover {
+  opacity: 0.75;
+  cursor: pointer;
 }
 
 .keybind-bind {
-  /* color: lighter(@window_bg_color); */
-  font-weight: bold;
+  text-transform: lowercase;
+  opacity: 0.35;
 }
 
 .keybind-label {
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: 1px solid @foreground;
+}
+
+:not(.calc).current {
+  font-style: italic;
+}
+
+.preview-content.archlinuxpkgs {
+  font-family: monospace;
 }
