@@ -1,7 +1,11 @@
-# Security & Authentication
+# System & Security
 gnome-keyring
+openssh
 polkit-gnome
+ufw
+usbutils
 
+<<<<<<< HEAD
 # Privacy
 mullvad-vpn
 brave-bin
@@ -12,55 +16,75 @@ spotify-launcher
 
 # Social
 discord
+=======
+# Terminal & Shell
+bat
+bc
+btop
+eza
+fastfetch
+fd
+fzf
+ghostty
+jq
+pv
+ripgrep
+starship
+zoxide
+zsh
+>>>>>>> c7fffd743c5d00fb408e45926e91cb3021b77e4d
 
 # Development
 git
 lazygit
 cursor-bin
 
-# Terminal & Shell
-ghostty
-zsh
-starship
-eza
-bat
-btop
-fastfetch
-fd
-fzf
-ripgrep
-zoxide
-pv
-bc
+# Browsers
+helium-browser-bin
+zen-browser-bin
 
-# Hyprland Ecosystem
+# Hyprland
+hyprcursor
+hyprgraphics
+hypridle
 hyprland
 hyprland-guiutils
-hyprland-qt-support
+hyprlang
+hyprlock
 hyprpaper
 hyprpicker
+<<<<<<< HEAD
+=======
+hyprtoolkit
+hyprutils
+hyprwayland-scanner
+>>>>>>> c7fffd743c5d00fb408e45926e91cb3021b77e4d
 xdg-desktop-portal-hyprland
-hyprsunset
-hyprcursor
-hyprshot
 
-# Wayland Tools & UI
-waybar
-mako
-walker
-swayosd
-grim
-slurp
-satty
-kooha
-zenity
-uwsm
-python-pywal16
+# Wayland UI & Utilities
 gjs
-waypaper
-matugen-bin
+grim
 impala
-loupe
+mako
+imagemagick
+matugen
+satty
+slurp
+sunsetr
+swayosd
+tesseract
+tesseract-data-eng
+tinte
+uwsm
+walker
+waybar
+zenity
+
+# Screen Recording & Video
+ffmpeg
+gpu-screen-recorder
+handbrake-cli
+yt-dlp
 
 # Audio
 pamixer
@@ -72,29 +96,28 @@ bluez
 bluez-libs
 bluez-utils
 bluetui
-openssh
-ufw
 
-# File Management
+# File Management & Desktop
+gvfs-dnssd
+loupe
 nautilus
 nautilus-open-any-terminal
 rsync
-gvfs-dnssd
 unzip
 
 # System Utilities
-plocate
 pacman-contrib
+plocate
 power-profiles-daemon
 
-# Fonts, themes & icons
-ttf-cascadia-mono-nerd
+# Appearance
+bibata-cursor-theme
+gnome-themes-extra
 noto-fonts
 noto-fonts-emoji
 otf-font-awesome
+ttf-cascadia-mono-nerd
 yaru-icon-theme
-bibata-cursor-theme
-gnome-themes-extra
 
 # Applications
 localsend-bin
@@ -102,25 +125,15 @@ mpv
 
 # Elephant Suite
 elephant
-elephant-desktopapplications
-elephant-providerlist
-elephant-clipboard
-elephant-menus
 elephant-calc
+elephant-clipboard
+elephant-desktopapplications
 elephant-files
-elephant-todo
+elephant-menus
+elephant-providerlist
 elephant-symbols
-
-# Image & Video Processing
-imagemagick
-ffmpeg
-handbrake-cli
-yt-dlp
+elephant-todo
 
 # Desktop Portals
 xdg-desktop-portal-gtk
 xdg-utils
-
-# Utilities
-wget
-jq
