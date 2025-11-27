@@ -17,9 +17,6 @@
             "4": "4",
             "5": "5",
             "6": "6",
-            "7": "7",
-            "8": "8",
-            "9": "9",
             "active": "",
          },
         "persistent-workspaces": {
@@ -33,7 +30,7 @@
 
     "tray": {
         "icon-size": 21,
-        "spacing": 10
+        "spacing": 15
     },
 
     "clock": {
@@ -71,6 +68,5 @@
         "bluetooth",
         "cpu",
         "battery",
-        "custom/hypridle",
     ]
 }

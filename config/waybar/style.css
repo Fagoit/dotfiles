@@ -43,16 +43,12 @@ window#waybar {
 #custom-exit,
 #custom-openwebui,
 #custom-brightness,
-#custom-hypridle,
 #custom-filemanager {
     min-width: 12px;
     margin: 0 8px;
     font-size: 16px;
 }
 
-#custom-hypridle.notactive {
-    color: rgb(224, 137, 137);
-}
 tooltip {
     background-color: alpha(@background, 0.9);
     padding: 20px;

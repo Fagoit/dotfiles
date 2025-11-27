@@ -25,15 +25,6 @@
     "hide-empty-text": true,
     "on-click": "ghostty --class=local.floating -e update-perform"
   },
-  "custom/hypridle": {
-    "format": "",
-    "return-type": "json",
-    "escape": true,
-    "exec-on-event": true,
-    "interval": 60,
-    "exec": "hypridle-toggle status",
-    "on-click": "hypridle-toggle toggle"
-  },
   "custom/music": {
     "format": "  {}",
     "escape": true,

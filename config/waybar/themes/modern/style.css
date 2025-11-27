@@ -39,7 +39,6 @@
 #clock,
 #pulseaudio,
 #custom-brightness,
-#custom-hypridle,
 #custom-updates {
     background-color: @background;
     padding: 0.5rem 1rem;
@@ -75,12 +74,6 @@
     color: @foreground;
 }
 
-#custom-hypridle {
-    border-radius: 0rem 1rem 1rem 0rem;
-    margin-right: 1rem;
-    color: @foreground;
-}
-
 #tray {
     border-radius: 1rem;
 }
@@ -91,9 +84,6 @@
     color: @foreground;
 }
 
-#custom-hypridle.notactive {
-    color: rgb(224, 137, 137);
-}
 
 tooltip {
     background-color: alpha(@background, 0.9);
@@ -104,8 +94,4 @@ tooltip {
 
 tooltip label {
     color: @foreground;
-}
-
-#custom-hypridle.notactive {
-    color: rgb(224, 137, 137);
 }
