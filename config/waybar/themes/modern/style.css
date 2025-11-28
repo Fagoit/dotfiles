@@ -31,15 +31,17 @@
 }
 
 #custom-music,
-#network,
-#battery,
 #tray,
 #bluetooth,
 #cpu,
 #clock,
+#network,
+#battery,
 #pulseaudio,
 #custom-brightness,
-#custom-updates {
+#custom-hypridle,
+#custom-updates,
+#custom-exit {
     background-color: @background;
     padding: 0.5rem 1rem;
     margin: 5px 0;
@@ -70,7 +72,15 @@
 
 #cpu,
 #network,
+#battery,
+#custom-hypridle,
 #custom-brightness {
+    color: @foreground;
+}
+
+#custom-exit {
+    border-radius: 0rem 1rem 1rem 0rem;
+    margin-right: 1rem;
     color: @foreground;
 }
 
@@ -78,12 +88,14 @@
     border-radius: 1rem;
 }
 
-#custom-updates,
-#custom-screenrecord {
+#custom-updates {
     border-radius: 1rem;
     color: @foreground;
 }
 
+#custom-hypridle.notactive {
+    color: rgb(224, 137, 137);
+}
 
 tooltip {
     background-color: alpha(@background, 0.9);

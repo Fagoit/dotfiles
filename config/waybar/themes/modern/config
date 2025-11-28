@@ -17,6 +17,9 @@
             "4": "4",
             "5": "5",
             "6": "6",
+            "7": "7",
+            "8": "8",
+            "9": "9",
             "active": "",
          },
         "persistent-workspaces": {
@@ -30,7 +33,7 @@
 
     "tray": {
         "icon-size": 21,
-        "spacing": 15
+        "spacing": 10
     },
 
     "clock": {
@@ -52,8 +55,7 @@
 
     "modules-left": [
         "hyprland/workspaces",
-        "custom/updates",
-        "custom/screenrecord"
+        "custom/updates"
     ],
 
     "modules-center": [
@@ -64,9 +66,12 @@
         "pulseaudio",
         "clock",
         "tray",
-        "network",
         "bluetooth",
+        "network",
         "cpu",
+        "custom/brightness",
+        "custom/hypridle",
         "battery",
+        "custom/exit"
     ]
 }
