@@ -5,7 +5,6 @@ polkit-gnome
 ufw
 usbutils
 
-<<<<<<< HEAD
 # Privacy
 mullvad-vpn
 brave-bin
@@ -16,7 +15,6 @@ spotify-launcher
 
 # Social
 discord
-=======
 # Terminal & Shell
 bat
 bc
@@ -32,7 +30,6 @@ ripgrep
 starship
 zoxide
 zsh
->>>>>>> c7fffd743c5d00fb408e45926e91cb3021b77e4d
 
 # Development
 git
@@ -53,12 +50,9 @@ hyprlang
 hyprlock
 hyprpaper
 hyprpicker
-<<<<<<< HEAD
-=======
 hyprtoolkit
 hyprutils
 hyprwayland-scanner
->>>>>>> c7fffd743c5d00fb408e45926e91cb3021b77e4d
 xdg-desktop-portal-hyprland
 
 # Wayland UI & Utilities
@@ -82,7 +76,6 @@ zenity
 
 # Screen Recording & Video
 ffmpeg
-gpu-screen-recorder
 handbrake-cli
 yt-dlp
 
