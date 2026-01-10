@@ -7,8 +7,8 @@ usbutils
 
 # Privacy
 mullvad-vpn
-brave-bin
-tor
+librewolf-bin
+tor-browser-bin
 
 # Productivity
 spotify-launcher
