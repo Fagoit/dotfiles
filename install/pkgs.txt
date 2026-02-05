@@ -36,10 +36,6 @@ git
 lazygit
 cursor-bin
 
-# Browsers
-helium-browser-bin
-zen-browser-bin
-
 # Hyprland
 hyprcursor
 hyprgraphics
