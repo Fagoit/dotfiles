@@ -7,7 +7,7 @@ usbutils
 
 # Privacy
 mullvad-vpn
-librewolf-bin
+brave
 tor-browser-bin
 
 # Productivity
@@ -15,6 +15,7 @@ spotify-launcher
 
 # Social
 discord
+
 # Terminal & Shell
 bat
 bc
@@ -33,7 +34,6 @@ zsh
 
 # Development
 git
-lazygit
 cursor-bin
 
 # Hyprland
