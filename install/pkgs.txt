@@ -11,7 +11,7 @@ brave
 tor-browser-bin
 
 # Productivity
-spotify-launcher
+spotify
 
 # Social
 discord
