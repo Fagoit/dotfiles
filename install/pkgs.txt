@@ -8,10 +8,9 @@ usbutils
 # Privacy
 mullvad-vpn
 brave
-tor-browser-bin
 
 # Productivity
-spotify
+spotify-launcher
 
 # Social
 discord
