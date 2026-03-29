@@ -7,7 +7,7 @@ else
   browsers=(
     "helium-browser"
     "chromium"
-    "brave-browser"
+    "librewolf"
     "google-chrome"
     "microsoft-edge"
     "vivaldi"
@@ -34,7 +34,7 @@ fi
 
 # Ensure .desktop extension if needed
 case $browser in
-google-chrome* | brave-browser* | microsoft-edge* | opera* | vivaldi*) ;;
+google-chrome* | librewolf* | microsoft-edge* | opera* | vivaldi*) ;;
 *) browser="$browser.desktop" ;;
 esac
 

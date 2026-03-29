@@ -20,19 +20,23 @@ ln -snf "$DOTFILES_DIR/current/theme/neovim.lua" "$HOME/.config/nvim/lua/plugins
 ln -snf "$DOTFILES_DIR/current/theme/btop.theme" "$HOME/.config/btop/themes/current.theme"
 ln -snf "$DOTFILES_DIR/current/theme/mako.ini" "$HOME/.config/mako/config"
 
-mkdir -p "$HOME/.config/fastfetch"
-ln -snf "$DOTFILES_DIR/config/fastfetch/configs/config-default.jsonc" "$HOME/.config/fastfetch/config.jsonc"
+rm -rf "$HOME/.config/fastfetch"
+ln -snf "$DOTFILES_DIR/config/fastfetch" "$HOME/.config/fastfetch"
 
 log_info "Setting up wallpapers symlink..."
 mkdir -p "$HOME/Pictures"
-if [ -L "$HOME/Pictures/dotfiles-wallpapers" ] || [ -d "$HOME/Pictures/dotfiles-wallpapers" ]; then
-  mv "$HOME/Pictures/dotfiles-wallpapers" "$HOME/Pictures/dotfiles-wallpapers-backup"
+if [ -L "$HOME/Pictures/dotfiles-wallpapers" ]; then
+  rm -f "$HOME/Pictures/dotfiles-wallpapers"
+elif [ -d "$HOME/Pictures/dotfiles-wallpapers" ]; then
+  mv "$HOME/Pictures/dotfiles-wallpapers" "$HOME/Pictures/dotfiles-wallpapers-backup-$(date +%s)"
 fi
 ln -sf "$DOTFILES_DIR/backgrounds" "$HOME/Pictures/dotfiles-wallpapers"
 log_detail "Wallpapers symlinked to ~/Pictures/dotfiles-wallpapers"
 
-gsettings set org.gnome.desktop.interface icon-theme "Yaru-sage"
-gsettings set org.gnome.desktop.interface font-name 'CaskaydiaMono Nerd Font Mono 11'
-gsettings set org.gnome.desktop.interface monospace-font-name 'CaskaydiaMono Nerd Font Mono 11'
+if command -v gsettings &>/dev/null; then
+  gsettings set org.gnome.desktop.interface icon-theme "$(<"$DOTFILES_DIR/current/theme/icons.theme")"
+  gsettings set org.gnome.desktop.interface font-name 'CaskaydiaMono Nerd Font Mono 11'
+  gsettings set org.gnome.desktop.interface monospace-font-name 'CaskaydiaMono Nerd Font Mono 11'
+fi
 
 log_success "Initial theme set (everforest)"

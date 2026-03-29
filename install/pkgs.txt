@@ -7,13 +7,7 @@ usbutils
 
 # Privacy
 mullvad-vpn
-brave
-
-# Productivity
-spotify-launcher
-
-# Social
-discord
+librewolf
 
 # Terminal & Shell
 bat
@@ -33,7 +27,6 @@ zsh
 
 # Development
 git
-cursor-bin
 
 # Hyprland
 hyprcursor
@@ -125,3 +118,4 @@ elephant-todo
 # Desktop Portals
 xdg-desktop-portal-gtk
 xdg-utils
+\

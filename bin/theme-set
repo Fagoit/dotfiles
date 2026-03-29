@@ -9,9 +9,7 @@ set_wallpaper() {
   local wallpaper="$1"
   ln -nsf "$wallpaper" "$CURRENT_BACKGROUND_LINK"
 
-  hyprctl monitors -j | jq -r '.[].name' | while read -r monitor; do
-    hyprctl hyprpaper reload "$monitor,$CURRENT_BACKGROUND_LINK"
-  done
+  systemctl --user restart hyprpaper.service
   log_success "Wallpaper set: $(basename "$wallpaper")"
 }
 
