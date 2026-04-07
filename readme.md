@@ -2,7 +2,7 @@
 
 [![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793D1?logo=arch-linux&logoColor=white)](https://archlinux.org/)
 
-Fork of [MacieJonos/dotfiles](https://github.com/setstack/dotfiles) (now archived). I update this when I feel like it.
+Fork of [MacieJonos/dotfiles](https://github.com/MacieJonos/dotfiles) (now archived). I update this when I feel like it.
 
 Dotfiles setup with static and dynamic themes and plenty of useful scripts.
 
