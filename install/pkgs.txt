@@ -7,7 +7,7 @@ usbutils
 
 # Privacy
 mullvad-vpn
-librewolf
+librewolf-bin
 
 # Terminal & Shell
 bat
@@ -101,7 +101,6 @@ ttf-cascadia-mono-nerd
 yaru-icon-theme
 
 # Applications
-localsend-bin
 mpv
 
 # Elephant Suite
