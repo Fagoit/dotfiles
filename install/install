@@ -91,6 +91,7 @@ TOTAL_STEPS=8
 CURRENT_STEP=0
 
 if ! is_installed "yay"; then
+  TOTAL_STEPS=$((TOTAL_STEPS + 1))
   CURRENT_STEP=$((CURRENT_STEP + 1))
   log_step "[$CURRENT_STEP/$TOTAL_STEPS] Installing yay AUR helper"
   _installyay
@@ -133,12 +134,12 @@ hyprctl reload 2>/dev/null || log_detail "Hyprland not running, skipping reload"
 END_TIME=$(date +%s)
 TOTAL_TIME=$((END_TIME - START_TIME))
 MINUTES=$((TOTAL_TIME / 60))
-SECONDS=$((TOTAL_TIME % 60))
+SECS=$((TOTAL_TIME % 60))
 
 clear
 log_header "Installation Complete!"
 echo
-log_success "Installed in ${MINUTES}m ${SECONDS}s"
+log_success "Installed in ${MINUTES}m ${SECS}s"
 echo
 
 # Load backup info from session file for display
