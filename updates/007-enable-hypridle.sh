@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Only enable hypridle on laptops
+if ! ls /sys/class/power_supply/BAT* >/dev/null 2>&1 && [ ! -d /sys/class/power_supply/battery ]; then
+  echo "  - Desktop detected, skipping hypridle"
+  exit 0
+fi
+
 SERVICE="hypridle.service"
 
 if systemctl --user is-active --quiet "$SERVICE" 2>/dev/null; then
