@@ -117,4 +117,3 @@ elephant-todo
 # Desktop Portals
 xdg-desktop-portal-gtk
 xdg-utils
-\

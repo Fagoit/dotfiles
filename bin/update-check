@@ -15,9 +15,9 @@ if [ $instance_count -gt 1 ]; then
     sleep $instance_count
 fi
 
-threshhold_green=0
-threshhold_yellow=25
-threshhold_red=100
+threshold_green=0
+threshold_yellow=25
+threshold_red=100
 
 if [[ $(_checkCommandExists "pacman") == 0 ]]; then
     aur_helper="yay"
@@ -35,8 +35,8 @@ if [[ $(_checkCommandExists "pacman") == 0 ]]; then
     aur_updates=0
     if command -v yay >/dev/null 2>&1; then
         aur_updates=$(yay -Qua 2>/dev/null | wc -l)
-    elif command -v yay >/dev/null 2>&1; then
-        aur_updates=$(yay -Qua 2>/dev/null | wc -l)
+    elif command -v paru >/dev/null 2>&1; then
+        aur_updates=$(paru -Qua 2>/dev/null | wc -l)
     fi
 
     updates=$((official_updates + aur_updates))
@@ -45,16 +45,16 @@ else
 fi
 
 css_class="green"
-if [ "$updates" -gt $threshhold_yellow ]; then
+if [ "$updates" -gt $threshold_yellow ]; then
     css_class="yellow"
 fi
 
-if [ "$updates" -gt $threshhold_red ]; then
+if [ "$updates" -gt $threshold_red ]; then
     css_class="red"
 fi
 
 if [ "$updates" != 0 ]; then
-    if [ "$updates" -gt $threshhold_green ]; then
+    if [ "$updates" -gt $threshold_green ]; then
         printf '{"text": "%s", "alt": "%s", "tooltip": "Click to update your system", "class": "%s"}' "$updates" "$updates" "$css_class"
     else
         printf '{"text": "0", "alt": "0", "tooltip": "No updates available", "class": "green"}'

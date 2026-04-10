@@ -47,6 +47,16 @@ apply_dynamic_theme() {
   log_success "${theme_name^} theme applied"
 }
 
+install_waybar_colors() {
+  local theme_path="$1"
+  local waybar_colors="$theme_path/waybar-colors.css"
+
+  if [[ -f "$waybar_colors" ]]; then
+    cp "$waybar_colors" "$HOME/.config/waybar/colors.css"
+    log_success "Waybar colors installed from theme"
+  fi
+}
+
 switch_theme() {
   local theme_name="$1"
 
@@ -62,6 +72,7 @@ switch_theme() {
   log_step "Switching to theme: $theme_name"
 
   ln -nsf "$theme_path" "$CURRENT_THEME_LINK"
+  install_waybar_colors "$theme_path"
 
   local wallpaper=$(find -L "$theme_path/backgrounds" -type f | sort | head -n 1)
   if [[ -n "$wallpaper" ]]; then

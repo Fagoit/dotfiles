@@ -39,3 +39,7 @@ output_path = '~/.local/share/dotfiles/themes/matugen/walker.css'
 [templates.nvim]
 input_path = '~/.config/matugen/templates/neovim.tmpl'
 output_path = '~/.local/share/dotfiles/themes/matugen/neovim.lua'
+
+[templates.waybar-colors]
+input_path = '~/.config/matugen/templates/waybar-colors.css'
+output_path = '~/.config/waybar/colors.css'
