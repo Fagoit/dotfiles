@@ -1,14 +1,11 @@
-ZSH_THEME="robbyrussell"
+ZSH_THEME="bira"
 
 plugins=(
   git
   sudo
   archlinux
-  extract
-  colored-man-pages
   zsh-autosuggestions
   fast-syntax-highlighting
-  you-should-use
   copyfile
   copybuffer
 )
