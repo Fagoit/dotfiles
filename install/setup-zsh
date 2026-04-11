@@ -48,6 +48,14 @@ else
     log_detail "fast-syntax-highlighting already installed"
 fi
 
+if [ ! -d "$ZSH_CUSTOM/plugins/you-should-use" ]; then
+    git clone https://github.com/MichaelAquilina/zsh-you-should-use.git \
+      "$ZSH_CUSTOM/plugins/you-should-use"
+    log_success "you-should-use installed"
+else
+    log_detail "you-should-use already installed"
+fi
+
 log_info "Setting up .zshrc..."
 if [ -f "$HOME/.zshrc" ] || [ -L "$HOME/.zshrc" ]; then
     if [ -e "$HOME/.zshrc" ]; then

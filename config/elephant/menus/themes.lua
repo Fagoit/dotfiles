@@ -36,6 +36,13 @@ function GetEntries()
 			},
 		},
 		{
+			Text = "OMZ theme",
+			Icon = "",
+			Actions = {
+				["change-omz"] = "walker --theme menus -m menus:omz-themes -N",
+			},
+		},
+		{
 			Text = "Cursor theme",
 			Icon = "󰸌",
 			Actions = {
