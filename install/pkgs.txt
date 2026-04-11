@@ -1,4 +1,5 @@
 # System & Security
+# NOTE: On OpenRC (e.g. Artix), install elogind + elogind-openrc for session management
 gnome-keyring
 openssh
 polkit-gnome
@@ -57,7 +58,7 @@ swayosd
 tesseract
 tesseract-data-eng
 tinte
-uwsm
+uwsm  # systemd-only; not needed on OpenRC
 walker
 waybar
 zenity
@@ -89,7 +90,7 @@ unzip
 # System Utilities
 pacman-contrib
 plocate
-power-profiles-daemon
+power-profiles-daemon  # systemd-only; ignored on OpenRC
 
 # Appearance
 bibata-cursor-theme

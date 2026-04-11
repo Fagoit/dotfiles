@@ -22,7 +22,9 @@ HARDWARE=$(detect_hardware_type)
 if [ "$HARDWARE" = "laptop" ]; then
   spinner "Installing brightnessctl..." yay --noconfirm -S brightnessctl
   KEYBIND_CONF="laptop-keybindings.conf"
-  systemctl --user enable --now hypridle.service 2>/dev/null && log_detail "Enabled hypridle service" || true
+  if has_systemd_user; then
+    systemctl --user enable --now hypridle.service 2>/dev/null && log_detail "Enabled hypridle service" || true
+  fi
   log_detail "Detected laptop hardware"
 else
   spinner "Installing ddcutil..." yay --noconfirm -S ddcutil

@@ -44,5 +44,5 @@ else
 
   ln -nsf "$NEW_BACKGROUND" "$CURRENT_BACKGROUND_LINK"
 
-  systemctl --user restart hyprpaper.service
+  restart-app hyprpaper
 fi

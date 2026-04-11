@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# Check if Hyprland is running under UWSM
-# Sends a persistent notification if not
+# Check if Hyprland is running under UWSM (systemd sessions only).
+# On non-systemd (OpenRC/elogind) sessions, uwsm is not available and not required.
+
+if ! command -v uwsm >/dev/null 2>&1; then
+    exit 0
+fi
 
 if ! uwsm check is-active; then
     notify-send \

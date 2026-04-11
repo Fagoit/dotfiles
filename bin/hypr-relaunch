@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Relaunch Hyprland session.
+# On uwsm-managed sessions: cleanly stops the uwsm wrapper (which restarts Hyprland).
+# On non-uwsm sessions: sends SIGTERM to Hyprland directly (login manager will respawn).
+
+if command -v uwsm >/dev/null 2>&1 && uwsm check is-active 2>/dev/null; then
+  exec uwsm stop
+fi
+
+hyprctl dispatch exit

@@ -64,16 +64,20 @@ for pkg in "${NEW_PACKAGES[@]}"; do
   fi
 done
 
-mkdir -p "$HOME/.config/systemd/user"
-if [ -d "$DOTFILES_DIR/default/systemd/user" ]; then
-  cp -f "$DOTFILES_DIR/default/systemd/user/"*.service "$HOME/.config/systemd/user/" 2>/dev/null || true
-  log_detail "Service files copied"
-fi
+if command -v systemctl >/dev/null 2>&1 && [ -d "/run/systemd/system" ]; then
+  mkdir -p "$HOME/.config/systemd/user"
+  if [ -d "$DOTFILES_DIR/default/systemd/user" ]; then
+    cp -f "$DOTFILES_DIR/default/systemd/user/"*.service "$HOME/.config/systemd/user/" 2>/dev/null || true
+    log_detail "Service files copied"
+  fi
 
-systemctl --user daemon-reload 2>/dev/null || {
-  log_error "Failed to reload systemd"
-  true
-}
+  systemctl --user daemon-reload 2>/dev/null || {
+    log_error "Failed to reload systemd"
+    true
+  }
+else
+  log_detail "Non-systemd session detected, skipping systemd migration steps"
+fi
 
 [ -d "$HOME/.config/wal" ] && rm -rf "$HOME/.config/wal"
 [ -d "$HOME/.config/waypaper" ] && rm -rf "$HOME/.config/waypaper"

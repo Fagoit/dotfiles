@@ -28,8 +28,16 @@ fi
 
 # Enable and start PostgreSQL service
 log_step "Enabling and starting PostgreSQL service..."
-sudo systemctl enable postgresql
-sudo systemctl start postgresql
+if [ -d "/run/systemd/system" ] && command -v systemctl &>/dev/null; then
+  sudo systemctl enable postgresql
+  sudo systemctl start postgresql
+elif command -v rc-update &>/dev/null && command -v rc-service &>/dev/null; then
+  sudo rc-update add postgresql default
+  sudo rc-service postgresql start
+else
+  log_error "Could not detect service manager for PostgreSQL"
+  exit 1
+fi
 
 # Test connection
 log_step "Testing connection..."

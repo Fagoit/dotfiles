@@ -171,6 +171,47 @@ has_nvidia_gpu() {
     lspci | grep -i nvidia &>/dev/null
 }
 
+detect_init_system() {
+    local pid1
+    pid1=$(ps -p 1 -o comm= 2>/dev/null | tr -d ' ')
+
+    if [ "$pid1" = "systemd" ]; then
+        echo "systemd"
+        return
+    fi
+
+    if [ "$pid1" = "openrc-init" ] || [ "$pid1" = "init" ]; then
+        if command -v rc-service &>/dev/null; then
+            echo "openrc"
+            return
+        fi
+    fi
+
+    if command -v rc-service &>/dev/null && command -v rc-update &>/dev/null; then
+        echo "openrc"
+        return
+    fi
+
+    if command -v systemctl &>/dev/null; then
+        echo "systemd"
+        return
+    fi
+
+    echo "unknown"
+}
+
+is_systemd_init() {
+    [ "$(detect_init_system)" = "systemd" ]
+}
+
+is_openrc_init() {
+    [ "$(detect_init_system)" = "openrc" ]
+}
+
+has_systemd_user() {
+    command -v systemctl &>/dev/null && [ -d "/run/systemd/system" ]
+}
+
 remove_path() {
     local target="$1"
 

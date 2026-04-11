@@ -27,7 +27,7 @@ fi
 
 pkill hyprpaper 2>/dev/null || true
 
-uwsm app -- hyprpaper >/dev/null 2>&1 &
+uwsm-app hyprpaper >/dev/null 2>&1 &
 
 for i in {1..10}; do
   if hyprctl hyprpaper listloaded &>/dev/null; then

@@ -1,0 +1,44 @@
+#!/bin/bash
+
+ACTION="$1"
+
+run_suspend() {
+  loginctl suspend 2>/dev/null && return 0
+  systemctl suspend 2>/dev/null && return 0
+  if command -v zzz >/dev/null 2>&1; then
+    zzz 2>/dev/null && return 0
+  fi
+  return 1
+}
+
+run_reboot() {
+  loginctl reboot 2>/dev/null && return 0
+  systemctl reboot 2>/dev/null && return 0
+  reboot 2>/dev/null && return 0
+  sudo reboot 2>/dev/null && return 0
+  return 1
+}
+
+run_poweroff() {
+  loginctl poweroff 2>/dev/null && return 0
+  systemctl poweroff 2>/dev/null && return 0
+  poweroff 2>/dev/null && return 0
+  sudo poweroff 2>/dev/null && return 0
+  return 1
+}
+
+case "$ACTION" in
+  suspend)
+    run_suspend
+    ;;
+  reboot)
+    run_reboot
+    ;;
+  poweroff)
+    run_poweroff
+    ;;
+  *)
+    echo "Usage: system-action {suspend|reboot|poweroff}" >&2
+    exit 2
+    ;;
+esac

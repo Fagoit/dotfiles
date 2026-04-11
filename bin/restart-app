@@ -1,7 +1,58 @@
 #!/bin/bash
 
-if systemctl --user restart "$1.service"; then
-  notify-send "✓ $1 restarted successfully" -t 3000
-else
-  notify-send "✗ Failed to restart $1" -u critical -t 5000
-fi &
+APP="$1"
+
+if [ -z "$APP" ]; then
+  notify-send "✗ Missing app name" -u critical -t 5000
+  exit 1
+fi
+
+if command -v systemctl >/dev/null 2>&1 && [ -d "/run/systemd/system" ]; then
+  if systemctl --user restart "${APP}.service"; then
+    notify-send "✓ $APP restarted successfully" -t 3000
+  else
+    notify-send "✗ Failed to restart $APP" -u critical -t 5000
+  fi
+  exit 0
+fi
+
+case "$APP" in
+  waybar)
+    pkill -x waybar 2>/dev/null || true
+    nohup waybar >/dev/null 2>&1 &
+    ;;
+  hyprpaper)
+    pkill -x hyprpaper 2>/dev/null || true
+    nohup hyprpaper >/dev/null 2>&1 &
+    ;;
+  mako)
+    pkill -x mako 2>/dev/null || true
+    nohup mako >/dev/null 2>&1 &
+    ;;
+  swayosd)
+    pkill -x swayosd-server 2>/dev/null || true
+    nohup swayosd-server >/dev/null 2>&1 &
+    ;;
+  walker)
+    pkill -f "walker --gapplication-service" 2>/dev/null || true
+    nohup walker --gapplication-service >/dev/null 2>&1 &
+    ;;
+  sunsetr)
+    pkill -x sunsetr 2>/dev/null || true
+    nohup sunsetr >/dev/null 2>&1 &
+    ;;
+  hypridle)
+    pkill -x hypridle 2>/dev/null || true
+    nohup hypridle >/dev/null 2>&1 &
+    ;;
+  elephant)
+    pkill -x elephant 2>/dev/null || true
+    nohup elephant >/dev/null 2>&1 &
+    ;;
+  *)
+    notify-send "✗ No fallback restart for $APP" -u critical -t 5000
+    exit 1
+    ;;
+esac
+
+notify-send "✓ $APP restarted successfully" -t 3000

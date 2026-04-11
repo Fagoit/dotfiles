@@ -24,6 +24,7 @@ Dotfiles setup with static and dynamic themes and plenty of useful scripts.
 Quick info:
 
 - [bin](bin) - all scripts live here, it is added to path in uwsm config
+- [verify-openrc](bin/verify-openrc) - quick OpenRC post-install check for session apps and services
 - [install](install/install) - main installation script
 - [pkgs.txt](install/pkgs.txt) - packages to be installed
 - [setup-applications](install/setup-applications) - hides some annoying applications from launcher
@@ -31,7 +32,7 @@ Quick info:
 - [setup-config](install/setup-config) - copies full config into ~/.config
 - [setup-lazyvim](install/setup-lazyvim) - lazyvim setup
 - [setup-nvidia](install/setup-nvidia) - nvidia specific setup
-- [setup-system](install/setup-system) - ufw, pacman.conf, triggers nvidia-setup if on nvidia gpu, git, ly login manager (if exists), enables gcr agent for ssh, disables systemd-networkd-wait-online.service that causes extremly long boot time
+- [setup-system](install/setup-system) - ufw, pacman.conf, triggers nvidia-setup if on nvidia gpu, git, ly login manager (if exists), configures user services for systemd or Hyprland autostart fallback for OpenRC sessions
 - [setup-theme](install/setup-theme) - theming setup and symlinks
 - [setup-zsh](install/setup-zsh) - full zsh config with oh-my-zsh, plugins, nice features
 

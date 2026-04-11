@@ -9,7 +9,7 @@ set_wallpaper() {
   local wallpaper="$1"
   ln -nsf "$wallpaper" "$CURRENT_BACKGROUND_LINK"
 
-  systemctl --user restart hyprpaper.service
+  restart-app hyprpaper
   log_success "Wallpaper set: $(basename "$wallpaper")"
 }
 

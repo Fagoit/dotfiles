@@ -50,21 +50,33 @@ _installyay() {
 }
 
 _installPackages() {
+  local init_system
+  init_system=$(detect_init_system)
   local total=$(grep -v '^#' "$1" | grep -v '^$' | wc -l)
   local current=0
   local failed_packages=()
 
-  while IFS= read -r pkg || [ -n "$pkg" ]; do
-    [[ -z "$pkg" || "$pkg" =~ ^# ]] && continue
+  while IFS= read -r line || [ -n "$line" ]; do
+    [[ -z "$line" || "$line" =~ ^# ]] && continue
 
     current=$((current + 1))
+
+    if [ "$init_system" != "systemd" ] && [[ "$line" == *"# systemd-only"* ]]; then
+      local skipped_pkg="${line%%#*}"
+      skipped_pkg="${skipped_pkg// /}"
+      log_progress "$skipped_pkg (skipped: systemd-only)" "$current/$total"
+      continue
+    fi
+
+    local pkg="${line%%#*}"
+    pkg="${pkg// /}"
+    [[ -z "$pkg" ]] && continue
 
     if is_installed "${pkg}"; then
       log_progress "$pkg (already installed)" "$current/$total"
       continue
     fi
 
-    # Try to install, handle conflicts gracefully
     if spinner "Installing $pkg... [$current/$total]" yay --noconfirm --needed -S "${pkg}" 2>&1; then
       log_success "$pkg"
     else
@@ -162,16 +174,30 @@ echo
 log_info "Please reboot for all changes to take effect"
 echo
 
-gum confirm \
-  --prompt.foreground=2 \
-  --selected.foreground=15 \
-  --selected.background=2 \
-  --affirmative="OK" \
-  --negative="" \
-  "You have to pick Hyprland (uwsm-managed) in your login manager (like sddm, gdm, ly). Otherwise scripts will not be in PATH and will NOT WORK" || true
+if is_systemd_init; then
+  gum confirm \
+    --prompt.foreground=2 \
+    --selected.foreground=15 \
+    --selected.background=2 \
+    --affirmative="OK" \
+    --negative="" \
+    "You have to pick Hyprland (uwsm-managed) in your login manager (like sddm, gdm, ly). Otherwise scripts will not be in PATH and will NOT WORK" || true
+else
+  gum confirm \
+    --prompt.foreground=2 \
+    --selected.foreground=15 \
+    --selected.background=2 \
+    --affirmative="OK" \
+    --negative="" \
+    "Select Hyprland in your login manager (like ly, greetd). Make sure the dotfiles bin/ directory is in your PATH." || true
+fi
 
 echo
 if ask_yes_no "Reboot now?"; then
   clear
-  systemctl reboot --no-wall 2>/dev/null || reboot 2>/dev/null
+  if is_systemd_init; then
+    systemctl reboot --no-wall 2>/dev/null || reboot 2>/dev/null
+  else
+    reboot 2>/dev/null || sudo reboot 2>/dev/null
+  fi
 fi

@@ -1,0 +1,169 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [ -f "$HOME/.local/share/dotfiles/bin/lib/helpers.sh" ]; then
+  # shellcheck source=/dev/null
+  source "$HOME/.local/share/dotfiles/bin/lib/helpers.sh"
+else
+  log_header() { echo "== $* =="; }
+  log_info() { echo "[INFO] $*"; }
+  log_success() { echo "[OK]   $*"; }
+  log_error() { echo "[ERR]  $*" >&2; }
+  log_detail() { echo "  - $*"; }
+fi
+
+PASS_COUNT=0
+FAIL_COUNT=0
+WARN_COUNT=0
+
+pass() {
+  PASS_COUNT=$((PASS_COUNT + 1))
+  log_success "$1"
+}
+
+fail() {
+  FAIL_COUNT=$((FAIL_COUNT + 1))
+  log_error "$1"
+}
+
+warn() {
+  WARN_COUNT=$((WARN_COUNT + 1))
+  log_info "$1"
+}
+
+is_laptop() {
+  ls /sys/class/power_supply/BAT* >/dev/null 2>&1 || [ -d /sys/class/power_supply/battery ]
+}
+
+is_pkg_installed() {
+  pacman -Q "$1" >/dev/null 2>&1
+}
+
+is_process_running() {
+  local app="$1"
+  case "$app" in
+    swayosd)
+      pgrep -x "swayosd-server" >/dev/null 2>&1
+      ;;
+    walker)
+      pgrep -f "walker --gapplication-service" >/dev/null 2>&1
+      ;;
+    *)
+      pgrep -x "$app" >/dev/null 2>&1
+      ;;
+  esac
+}
+
+check_openrc_service_if_installed() {
+  local pkg="$1"
+  local service="$2"
+
+  if ! is_pkg_installed "$pkg"; then
+    warn "$pkg not installed (skipping $service service check)"
+    return
+  fi
+
+  if ! command -v rc-service >/dev/null 2>&1; then
+    fail "rc-service missing, cannot verify $service"
+    return
+  fi
+
+  if rc-service "$service" status >/dev/null 2>&1; then
+    pass "OpenRC service active: $service"
+  else
+    fail "OpenRC service not active: $service"
+  fi
+}
+
+log_header "OpenRC Dotfiles Verification"
+
+if [ -d "/run/systemd/system" ]; then
+  warn "System appears to be running under systemd (script is OpenRC-focused)"
+else
+  pass "systemd runtime dir not present"
+fi
+
+if command -v rc-service >/dev/null 2>&1 && command -v rc-update >/dev/null 2>&1; then
+  pass "OpenRC tooling available (rc-service + rc-update)"
+else
+  fail "OpenRC tooling missing (need rc-service and rc-update)"
+fi
+
+if pgrep -x "Hyprland" >/dev/null 2>&1; then
+  pass "Hyprland session is running"
+else
+  warn "Hyprland is not running (process checks below may fail)"
+fi
+
+USER_APPS=(
+  "mako"
+  "sunsetr"
+  "swayosd"
+  "walker"
+  "waybar"
+  "hyprpaper"
+  "elephant"
+)
+
+for app in "${USER_APPS[@]}"; do
+  if is_process_running "$app"; then
+    pass "Session app running: $app"
+  else
+    fail "Session app not running: $app"
+  fi
+done
+
+if is_laptop; then
+  if is_process_running "hypridle"; then
+    pass "Laptop power daemon running: hypridle"
+  else
+    fail "Laptop detected but hypridle is not running"
+  fi
+else
+  warn "Desktop detected (hypridle check skipped)"
+fi
+
+# Session infrastructure
+if pgrep -f "xdg-desktop-portal-hyprland" >/dev/null 2>&1; then
+  pass "xdg-desktop-portal-hyprland running"
+else
+  fail "xdg-desktop-portal-hyprland not running (file pickers, screen sharing broken)"
+fi
+
+if pgrep -f "xdg-desktop-portal" >/dev/null 2>&1; then
+  pass "xdg-desktop-portal running"
+else
+  fail "xdg-desktop-portal not running"
+fi
+
+if pgrep -f "gnome-keyring-daemon" >/dev/null 2>&1; then
+  pass "gnome-keyring-daemon running"
+else
+  fail "gnome-keyring-daemon not running (secrets/SSH agent may not work)"
+fi
+
+# OpenRC system services
+check_openrc_service_if_installed "ufw" "ufw"
+check_openrc_service_if_installed "docker" "docker"
+check_openrc_service_if_installed "postgresql" "postgresql"
+check_openrc_service_if_installed "ollama" "ollama"
+
+# Elogind (required for loginctl, seat management on OpenRC)
+if command -v loginctl >/dev/null 2>&1; then
+  if loginctl list-sessions >/dev/null 2>&1; then
+    pass "elogind/loginctl working"
+  else
+    fail "loginctl present but not functional (elogind may not be running)"
+  fi
+else
+  fail "loginctl not found (install elogind + elogind-openrc)"
+fi
+
+echo
+log_info "Results: ${PASS_COUNT} passed, ${FAIL_COUNT} failed, ${WARN_COUNT} warnings"
+echo
+
+if [ "$FAIL_COUNT" -gt 0 ]; then
+  exit 1
+fi

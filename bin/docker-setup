@@ -25,8 +25,16 @@ else
 fi
 
 log_step "Enabling and starting Docker service..."
-sudo systemctl enable docker
-sudo systemctl start docker
+if [ -d "/run/systemd/system" ] && command -v systemctl &>/dev/null; then
+  sudo systemctl enable docker
+  sudo systemctl start docker
+elif command -v rc-update &>/dev/null && command -v rc-service &>/dev/null; then
+  sudo rc-update add docker default
+  sudo rc-service docker start
+else
+  log_error "Could not detect service manager for Docker"
+  exit 1
+fi
 
 log_step "Testing Docker..."
 if sudo docker info &>/dev/null; then

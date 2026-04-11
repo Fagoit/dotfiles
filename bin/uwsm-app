@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Wrapper around `uwsm app --` that falls back to direct execution on non-systemd sessions.
+# Usage: uwsm-app <command> [args...]
+# In keybindings: uwsm-app ghostty, uwsm-app librewolf, etc.
+
+if command -v uwsm >/dev/null 2>&1 && uwsm check is-active 2>/dev/null; then
+  exec uwsm app -- "$@"
+else
+  exec "$@"
+fi

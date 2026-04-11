@@ -18,28 +18,28 @@ function GetEntries()
 			Text = "Suspend",
 			Icon = "󰤄",
 			Actions = {
-				["suspend"] = "systemctl suspend",
+				["suspend"] = "system-action suspend",
 			},
 		},
 		{
 			Text = "Relaunch",
 			Icon = "",
 			Actions = {
-				["relaunch"] = "uwsm stop",
+				["relaunch"] = "hypr-relaunch",
 			},
 		},
 		{
 			Text = "Restart",
 			Icon = "󰜉",
 			Actions = {
-				["restart"] = "systemctl reboot",
+				["restart"] = "system-action reboot",
 			},
 		},
 		{
 			Text = "Shutdown",
 			Icon = "󰐥",
 			Actions = {
-				["shutdown"] = "systemctl poweroff",
+				["shutdown"] = "system-action poweroff",
 			},
 		},
 	}

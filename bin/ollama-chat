@@ -24,7 +24,11 @@ check_ollama_running() {
     log_error "Ollama service is not running"
     echo
     log_info "Start the service with:"
-    log_detail "sudo systemctl start ollama.service"
+    if [ -d "/run/systemd/system" ] && command -v systemctl &>/dev/null; then
+      log_detail "sudo systemctl start ollama.service"
+    else
+      log_detail "sudo rc-service ollama start"
+    fi
     echo
     show_done
     exit 1
@@ -75,10 +79,24 @@ handle_install() {
   echo
   if ask_yes_no "Enable and start ollama?"; then
     log_step "Enabling and starting ollama.service..."
-    if sudo systemctl enable --now ollama.service; then
-      log_success "ollama.service started"
+    if [ -d "/run/systemd/system" ] && command -v systemctl &>/dev/null; then
+      if sudo systemctl enable --now ollama.service; then
+        log_success "ollama.service started"
+      else
+        log_error "Failed to start ollama.service"
+        show_done
+        exit 1
+      fi
+    elif command -v rc-update &>/dev/null && command -v rc-service &>/dev/null; then
+      if sudo rc-update add ollama default && sudo rc-service ollama start; then
+        log_success "ollama service started"
+      else
+        log_error "Failed to start ollama service"
+        show_done
+        exit 1
+      fi
     else
-      log_error "Failed to start ollama.service"
+      log_error "Could not detect service manager for ollama"
       show_done
       exit 1
     fi
