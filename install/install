@@ -25,8 +25,13 @@ log_info "Backup session: $BACKUP_SESSION"
 # Ensure gum is installed first
 ensure_gum
 
-# Authenticate sudo early to cache credentials
+# Authenticate sudo and keep it alive for the entire install.
+# Without this, the credential cache expires mid-install and yay/pacman
+# hangs on a password prompt hidden behind gum spin.
 sudo -v
+while true; do sudo -n true; sleep 50; done 2>/dev/null &
+SUDO_KEEPALIVE_PID=$!
+trap 'kill "$SUDO_KEEPALIVE_PID" 2>/dev/null' EXIT
 
 _installyay() {
   if ! is_installed "base-devel"; then

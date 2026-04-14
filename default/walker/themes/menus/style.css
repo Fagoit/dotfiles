@@ -171,17 +171,6 @@ child:selected .item-box {
   padding: 2px 4px;
   border-radius: 4px;
   border: 1px solid @foreground;
-<<<<<<< HEAD
-}
-
-:not(.calc).current {
-  font-style: italic;
-}
-
-.preview-content.archlinuxpkgs {
-  font-family: monospace;
-=======
->>>>>>> c7fffd743c5d00fb408e45926e91cb3021b77e4d
 }
 
 .error {
