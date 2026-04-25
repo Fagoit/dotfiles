@@ -1,0 +1,3 @@
+BACKUP_SESSION="backup_20260425_213852"
+BACKUP_DIR="/home/user/dotfiles-backup/backup_20260425_213852"
+RESTORE_FILE="/home/user/dotfiles-backup/backup_20260425_213852/RESTORE.txt"
