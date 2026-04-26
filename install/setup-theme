@@ -37,6 +37,12 @@ if command -v gsettings &>/dev/null; then
   gsettings set org.gnome.desktop.interface icon-theme "$(<"$DOTFILES_DIR/current/theme/icons.theme")"
   gsettings set org.gnome.desktop.interface font-name 'CaskaydiaMono Nerd Font Mono 11'
   gsettings set org.gnome.desktop.interface monospace-font-name 'CaskaydiaMono Nerd Font Mono 11'
+  # Force dark mode system-wide. gtk-theme-name in settings.ini only covers
+  # GTK3/4 apps that read the ini directly; libadwaita (GTK4) and Qt apps
+  # going through xdg-desktop-portal-gtk read color-scheme / gtk-theme from
+  # gsettings, which default to the light variant otherwise.
+  gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+  gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 fi
 
 log_success "Initial theme set (everforest)"

@@ -27,6 +27,8 @@ reload_apps() {
   if [[ -f "$gnome_icons_theme" ]]; then
     gsettings set org.gnome.desktop.interface icon-theme "$(<"$gnome_icons_theme")"
   fi
+  gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+  gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 
   log_success "Applications reloaded"
 }
