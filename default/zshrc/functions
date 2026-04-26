@@ -22,7 +22,7 @@ cp2c() {
     return 1
   fi
 
-  wl-copy < "$1"
+  xclip -selection clipboard < "$1"
 }
 
 c2f() {
@@ -30,5 +30,5 @@ c2f() {
     echo "Usage: create-from-clip <filename>" >&2
     return 1
   fi
-  wl-paste > "$1"
+  xclip -selection clipboard -out > "$1"
 }

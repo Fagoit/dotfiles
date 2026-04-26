@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+choice=$(printf '%s\n' Lock Suspend Restart Shutdown Logout | rofi -dmenu -p "System")
+
+case "$choice" in
+  Lock) i3lock -c 000000 ;;
+  Suspend) systemctl suspend ;;
+  Restart) systemctl reboot ;;
+  Shutdown) systemctl poweroff ;;
+  Logout) pkill -TERM wmaker ;;
+esac

@@ -1,0 +1,55 @@
+# Dotfiles WindowMaker keybindings.
+
+"ghostty"
+  Mod4 + q
+
+"librewolf"
+  Mod4 + b
+
+"nautilus --new-window"
+  Mod4 + e
+
+"rofi -show drun"
+  Mod4 + r
+
+"rofi -show run"
+  Mod4 + Alt + space
+
+"i3lock -c 000000"
+  XF86Lock
+
+"i3lock -c 000000"
+  Mod4 + Escape
+
+"maim -s | xclip -selection clipboard -t image/png"
+  Mod4 + Shift + s
+
+"bash -lc 'mkdir -p \"$HOME/Pictures\"; maim -s \"$HOME/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png\" && notify-send \"Saved Screenshot\"'"
+  Print
+
+"pamixer -i 5 && notify-send \"Volume\" \"$(pamixer --get-volume)%\""
+  XF86AudioRaiseVolume
+
+"pamixer -d 5 && notify-send \"Volume\" \"$(pamixer --get-volume)%\""
+  XF86AudioLowerVolume
+
+"pamixer -t && notify-send \"Volume\" \"Mute toggled\""
+  XF86AudioMute
+
+"playerctl play-pause"
+  XF86AudioPlay
+
+"playerctl play-pause"
+  XF86AudioPause
+
+"playerctl next"
+  XF86AudioNext
+
+"playerctl previous"
+  XF86AudioPrev
+
+"brightnessctl set +5% && notify-send \"Brightness\" \"$(brightnessctl get)\""
+  XF86MonBrightnessUp
+
+"brightnessctl set 5%- && notify-send \"Brightness\" \"$(brightnessctl get)\""
+  XF86MonBrightnessDown

@@ -52,7 +52,6 @@ echo
 
 # Reload
 restart-app elephant
-pkill -RTMIN+1 waybar
 echo
 
 if [ "$(uname -r | sed 's/-arch/\.arch/')" != "$(pacman -Q linux | awk '{print $2}')" ]; then

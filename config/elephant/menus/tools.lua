@@ -11,7 +11,7 @@ function GetEntries()
 			Text = "OCR",
 			Icon = "",
 			Actions = {
-				["OCR"] = [[grim -g "$(slurp)" - | tesseract stdin stdout -l eng | wl-copy]],
+				["OCR"] = [[maim -s | tesseract stdin stdout -l eng | xclip -selection clipboard]],
 			},
 		},
 		{
@@ -25,7 +25,7 @@ function GetEntries()
 			Text = "Transcode",
 			Icon = "",
 			Actions = {
-				["transcode"] = "walker --theme menus -m menus:transcode -N",
+				["transcode"] = "ghostty --class=local.floating -e transcode",
 			},
 		},
 		{
@@ -39,7 +39,7 @@ function GetEntries()
 			Text = "Backups",
 			Icon = "",
 			Actions = {
-				["backups"] = "walker --theme menus -m menus:backups -N",
+				["backups"] = "ghostty --class=local.floating -e backups",
 			},
 		},
 	}

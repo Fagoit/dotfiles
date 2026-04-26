@@ -47,10 +47,8 @@ NVIDIA_PACKAGES=(
     "$NVIDIA_DRIVER"
     "${HEADER_PKGS[@]}"
     "nvidia-utils"
-    "egl-wayland"
     "libva-nvidia-driver"
-    "qt5-wayland"
-    "qt6-wayland"
+    "nvidia-settings"
 )
 
 if ! spinner "Installing NVIDIA packages..." sudo pacman -S --needed --noconfirm "${NVIDIA_PACKAGES[@]}"; then

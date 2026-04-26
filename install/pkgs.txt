@@ -1,5 +1,6 @@
 # System & Security
 gnome-keyring
+ly
 openssh
 polkit-gnome
 ufw
@@ -28,39 +29,37 @@ zsh
 # Development
 git
 
-# Hyprland
-hyprcursor
-hyprgraphics
-hypridle
-hyprland
-hyprland-guiutils
-hyprlang
-hyprlock
-hyprpaper
-hyprpicker
-hyprshot
-hyprtoolkit
-hyprutils
-hyprwayland-scanner
-xdg-desktop-portal-hyprland
+# WindowMaker / X11
+windowmaker
+xorg-server
+xorg-xinit
+xorg-xrandr
+xorg-xrdb
+xorg-xset
+xorg-xsetroot
+xorg-xprop
+xorg-xwininfo
+xbindkeys
+xdotool
+picom
+feh
+maim
+slop
+xclip
+xss-lock
+i3lock
+rofi
+dunst
+xdg-desktop-portal-gtk
 
-# Wayland UI & Utilities
-gjs
-grim
+# Desktop UI & Utilities
 impala
-mako
 imagemagick
 matugen
 satty
-slurp
-sunsetr
-swayosd
 tesseract
 tesseract-data-eng
 tinte
-uwsm
-walker
-waybar
 zenity
 
 # Screen Recording & Video
@@ -70,6 +69,7 @@ yt-dlp
 
 # Audio
 pamixer
+playerctl
 wiremix
 pavucontrol
 
@@ -117,5 +117,4 @@ elephant-symbols
 elephant-todo
 
 # Desktop Portals
-xdg-desktop-portal-gtk
 xdg-utils

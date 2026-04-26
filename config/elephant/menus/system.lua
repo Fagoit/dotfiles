@@ -11,7 +11,7 @@ function GetEntries()
 			Text = "Lock",
 			Icon = "",
 			Actions = {
-				["lock"] = "pidof hyprlock || hyprlock &",
+				["lock"] = "i3lock -c 000000",
 			},
 		},
 		{
@@ -25,7 +25,7 @@ function GetEntries()
 			Text = "Relaunch",
 			Icon = "",
 			Actions = {
-				["relaunch"] = "uwsm stop",
+				["relaunch"] = "pkill -HUP wmaker",
 			},
 		},
 		{

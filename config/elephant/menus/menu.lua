@@ -31,7 +31,7 @@ function GetEntries()
 			Text = "Change themes",
 			Icon = "󰸌",
 			Actions = {
-				["change-themes"] = "walker -t menus -m menus:themes -N",
+				["change-themes"] = "theme-menu",
 			},
 		},
 		{
@@ -45,35 +45,35 @@ function GetEntries()
 			Text = "Capture",
 			Icon = "",
 			Actions = {
-				["capture"] = "walker -t menus -m menus:capture -N",
+				["capture"] = "screenshot-menu",
 			},
 		},
 		{
 			Text = "Setup",
 			Icon = "󰉉",
 			Actions = {
-				["setup"] = "walker -t menus -m menus:setup -N",
+				["setup"] = "rofi -show drun",
 			},
 		},
 		{
 			Text = "Tools",
 			Icon = "",
 			Actions = {
-				["tools"] = "walker -t menus -m menus:tools -N",
+				["tools"] = "rofi -show drun",
 			},
 		},
 		{
 			Text = "Keybindings",
 			Icon = "",
 			Actions = {
-				["keybindings"] = "walker -t menus -m menus:keybindings -N",
+				["keybindings"] = "ghostty --class=local.floating -e sh -lc 'sed -n \"1,160p\" ~/.xbindkeysrc; read -r _'",
 			},
 		},
 		{
 			Text = "System",
 			Icon = "󰐥",
 			Actions = {
-				["system"] = "walker -t menus -m menus:system -N",
+				["system"] = "system-menu",
 			},
 		},
 	}

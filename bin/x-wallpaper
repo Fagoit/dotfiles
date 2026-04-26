@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+CURRENT_BACKGROUND_LINK="$HOME/.local/share/dotfiles/current/background"
+
+if [ -L "$CURRENT_BACKGROUND_LINK" ] || [ -f "$CURRENT_BACKGROUND_LINK" ]; then
+  wallpaper=$(readlink -f "$CURRENT_BACKGROUND_LINK")
+elif [ -f "$CURRENT_BACKGROUND_LINK" ]; then
+  wallpaper="$CURRENT_BACKGROUND_LINK"
+else
+  wallpaper=""
+fi
+
+if [ -n "$wallpaper" ] && [ -f "$wallpaper" ] && command -v feh >/dev/null 2>&1; then
+  feh --bg-fill "$wallpaper"
+fi

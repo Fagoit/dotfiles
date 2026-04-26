@@ -1,0 +1,41 @@
+#!/bin/bash
+set -e
+
+DOTFILES_DIR="$HOME/.local/share/dotfiles"
+export PATH="$DOTFILES_DIR/bin:$PATH"
+export XDG_SESSION_TYPE=x11
+export XDG_CURRENT_DESKTOP=WindowMaker
+export DESKTOP_SESSION=windowmaker
+
+systemctl --user import-environment PATH DISPLAY XAUTHORITY XDG_SESSION_TYPE XDG_CURRENT_DESKTOP DESKTOP_SESSION 2>/dev/null || true
+systemctl --user start graphical-session.target 2>/dev/null || true
+
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 2>/dev/null &
+bash "$DOTFILES_DIR/bin/check-windowmaker-session" 2>/dev/null || true
+
+if command -v gnome-keyring-daemon >/dev/null 2>&1; then
+  eval "$(gnome-keyring-daemon --start --components=secrets,ssh 2>/dev/null || true)"
+  export SSH_AUTH_SOCK
+fi
+
+if command -v xset >/dev/null 2>&1; then
+  xset s on
+  xset s 600 60
+  xset dpms 900 1200 1800
+fi
+
+bash "$DOTFILES_DIR/bin/x-wallpaper" 2>/dev/null || true
+
+if command -v xbindkeys >/dev/null 2>&1 && [ -f "$HOME/.xbindkeysrc" ]; then
+  xbindkeys
+fi
+
+if command -v picom >/dev/null 2>&1; then
+  picom --daemon
+fi
+
+if command -v xss-lock >/dev/null 2>&1; then
+  xss-lock -- i3lock -c 000000 &
+fi
+
+exec wmaker

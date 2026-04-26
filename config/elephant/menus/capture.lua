@@ -11,14 +11,14 @@ function GetEntries()
 			Text = "Screenshot",
 			Icon = "",
 			Actions = {
-				["screenshot"] = "walker -t menus -m menus:screenshots -N",
+				["screenshot"] = "screenshot-menu",
 			},
 		},
 		{
 			Text = "Record",
 			Icon = "",
 			Actions = {
-				["record"] = "walker -t menus -m menus:screenrecord -N",
+				["record"] = "screenrecord",
 			},
 		},
 	}

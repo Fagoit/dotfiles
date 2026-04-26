@@ -34,6 +34,15 @@ done
 cp -r "$DOTFILES_DIR/config/"* "$HOME/.config/"
 log_success "Config copied!"
 
+if [ -d "$DOTFILES_DIR/default/windowmaker/GNUstep" ]; then
+  log_info "Installing WindowMaker defaults..."
+  [ -d "$HOME/GNUstep/Defaults" ] && backup_file "$HOME/GNUstep/Defaults"
+  mkdir -p "$HOME/GNUstep"
+  rm -rf "$HOME/GNUstep/Defaults"
+  cp -r "$DOTFILES_DIR/default/windowmaker/GNUstep/Defaults" "$HOME/GNUstep/Defaults"
+  log_success "WindowMaker defaults installed"
+fi
+
 echo "@import url(\"file://$HOME/.local/share/dotfiles/current/theme/gtk.css\");" >"$HOME/.config/gtk-3.0/gtk.css"
 echo "@import url(\"file://$HOME/.local/share/dotfiles/current/theme/gtk.css\");" >"$HOME/.config/gtk-4.0/gtk.css"
 
@@ -46,7 +55,7 @@ cat > "$HOME/.config/tinte/settings.json" << EOF
   "exportThemeLocation": "$HOME/.config/tinte/exported-themes",
   "applyThemeLocation": "$HOME/.local/share/dotfiles/themes/tinte",
   "colorBackend": "imagemagick",
-  "wallpaperBackend": "hyprpaper"
+  "wallpaperBackend": "feh"
 }
 EOF
 

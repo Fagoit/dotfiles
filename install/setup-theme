@@ -14,11 +14,9 @@ ln -snf "$DOTFILES_DIR/current/theme/backgrounds/1-everforest.jpg" "$DOTFILES_DI
 
 mkdir -p "$HOME/.config/nvim/lua/plugins"
 mkdir -p "$HOME/.config/btop/themes"
-mkdir -p "$HOME/.config/mako"
 
 ln -snf "$DOTFILES_DIR/current/theme/neovim.lua" "$HOME/.config/nvim/lua/plugins/theme.lua"
 ln -snf "$DOTFILES_DIR/current/theme/btop.theme" "$HOME/.config/btop/themes/current.theme"
-ln -snf "$DOTFILES_DIR/current/theme/mako.ini" "$HOME/.config/mako/config"
 
 rm -rf "$HOME/.config/fastfetch"
 ln -snf "$DOTFILES_DIR/config/fastfetch" "$HOME/.config/fastfetch"

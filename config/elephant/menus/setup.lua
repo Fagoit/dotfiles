@@ -18,7 +18,7 @@ function GetEntries()
 			Text = "Postgres",
 			Icon = "",
 			Actions = {
-				["postgres"] = "walker --theme menus -m menus:postgres -N",
+				["postgres"] = "ghostty --class=local.floating -e postgres-setup",
 			},
 		},
 		{

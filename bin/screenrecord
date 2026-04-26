@@ -25,12 +25,6 @@ cleanup_webcam() {
 start_webcam_overlay() {
   cleanup_webcam
 
-  # Get monitor scale
-  local scale=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true) | .scale')
-
-  # Target width (base 360px, scaled to monitor)
-  local target_width=$(awk "BEGIN {printf \"%.0f\", 360 * $scale}")
-
   # Try preferred 16:9 resolutions in order, use first available
   local preferred_resolutions=("640x360" "1280x720" "1920x1080")
   local video_size_arg=""
@@ -44,7 +38,7 @@ start_webcam_overlay() {
   done
 
   ffplay -f v4l2 $video_size_arg -framerate 30 /dev/video0 \
-    -vf "scale=${target_width}:-1" \
+    -vf "scale=360:-1" \
     -window_title "WebcamOverlay" \
     -noborder \
     -fflags nobuffer -flags low_delay \
@@ -89,16 +83,16 @@ stop_screenrecording() {
 }
 
 toggle_screenrecording_indicator() {
-  pkill -RTMIN+8 waybar
+  return 0
 }
 
 screenrecording_active() {
-  pgrep -f "gpu-screen-recorder" >/dev/null || pgrep -x slurp >/dev/null || pgrep -f "WebcamOverlay" >/dev/null
+  pgrep -f "gpu-screen-recorder" >/dev/null || pgrep -x slop >/dev/null || pgrep -f "WebcamOverlay" >/dev/null
 }
 
 if screenrecording_active; then
-  if pgrep -x slurp >/dev/null; then
-    pkill -x slurp 2>/dev/null
+  if pgrep -x slop >/dev/null; then
+    pkill -x slop 2>/dev/null
   elif pgrep -f "WebcamOverlay" >/dev/null && ! pgrep -f "gpu-screen-recorder" >/dev/null; then
     cleanup_webcam
   else
@@ -107,38 +101,15 @@ if screenrecording_active; then
 elif [[ "$SCOPE" == "output" ]]; then
   [[ "$WEBCAM" == "true" ]] && start_webcam_overlay
 
-  if ! output=$(slurp -o -f "%o"); then
-    [[ "$WEBCAM" == "true" ]] && cleanup_webcam
-    exit 1
-  fi
-
-  if [[ -z "$output" ]]; then
-    notify-send "Error" "Could not detect monitor" -u critical
-    [[ "$WEBCAM" == "true" ]] && cleanup_webcam
-    exit 1
-  fi
-
-  start_screenrecording "$output"
+  start_screenrecording screen
 else
   [[ "$WEBCAM" == "true" ]] && start_webcam_overlay
 
-  scale=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true) | .scale')
-
-  if ! region=$(slurp -f "%wx%h+%x+%y"); then
+  if ! region=$(slop -f "%wx%h+%x+%y"); then
     [[ "$WEBCAM" == "true" ]] && cleanup_webcam
     exit 1
   fi
 
-  if [[ "$region" =~ ^([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)$ ]]; then
-    w=$(awk "BEGIN {printf \"%.0f\", ${BASH_REMATCH[1]} * $scale}")
-    h=$(awk "BEGIN {printf \"%.0f\", ${BASH_REMATCH[2]} * $scale}")
-    x=$(awk "BEGIN {printf \"%.0f\", ${BASH_REMATCH[3]} * $scale}")
-    y=$(awk "BEGIN {printf \"%.0f\", ${BASH_REMATCH[4]} * $scale}")
-    scaled_region="${w}x${h}+${x}+${y}"
-  else
-    scaled_region="$region"
-  fi
-
-  start_screenrecording region -region "$scaled_region"
+  start_screenrecording region -region "$region"
 fi
 

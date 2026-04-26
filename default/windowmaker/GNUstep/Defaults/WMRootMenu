@@ -1,0 +1,28 @@
+(
+  "Dotfiles",
+  ("Terminal", EXEC, "ghostty"),
+  ("Browser", EXEC, "librewolf"),
+  ("Files", EXEC, "nautilus --new-window"),
+  ("Run", EXEC, "rofi -show run"),
+  ("Applications", EXEC, "rofi -show drun"),
+  ("Screenshots", MENU,
+    ("Area to Clipboard", EXEC, "maim -s | xclip -selection clipboard -t image/png"),
+    ("Area to File", EXEC, "mkdir -p \"$HOME/Pictures\"; maim -s \"$HOME/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png\""),
+    ("Fullscreen to Clipboard", EXEC, "maim | xclip -selection clipboard -t image/png"),
+    ("Fullscreen to File", EXEC, "mkdir -p \"$HOME/Pictures\"; maim \"$HOME/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png\"")
+  ),
+  ("Theme", MENU,
+    ("Next Wallpaper", EXEC, "theme-bg-next"),
+    ("Ristretto", EXEC, "theme-set ristretto"),
+    ("Everforest", EXEC, "theme-set everforest"),
+    ("Nord", EXEC, "theme-set nord")
+  ),
+  ("System", MENU,
+    ("Lock", EXEC, "i3lock -c 000000"),
+    ("Suspend", EXEC, "systemctl suspend"),
+    ("Restart WindowMaker", RESTART),
+    ("Exit WindowMaker", EXIT),
+    ("Reboot", EXEC, "systemctl reboot"),
+    ("Shutdown", EXEC, "systemctl poweroff")
+  )
+)

@@ -18,7 +18,6 @@ TOTAL=${#BACKGROUNDS[@]}
 
 if [[ $TOTAL -eq 0 ]]; then
   notify-send "No background was found for theme" -t 2000
-  hyprctl hyprpaper wallpaper "," 2>/dev/null || true
 
 else
   if [[ -L "$CURRENT_BACKGROUND_LINK" ]]; then
@@ -44,5 +43,5 @@ else
 
   ln -nsf "$NEW_BACKGROUND" "$CURRENT_BACKGROUND_LINK"
 
-  systemctl --user restart hyprpaper.service
+  bash "$HOME/.local/share/dotfiles/bin/x-wallpaper" 2>/dev/null || true
 fi

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+print_status() {
+  if pgrep -x xss-lock >/dev/null; then
+    echo '{"text": "RUNNING", "class": "active", "tooltip": "Screen locking active"}'
+  else
+    echo '{"text": "NOT RUNNING", "class": "notactive", "tooltip": "Screen locking deactivated"}'
+  fi
+}
+
+case "$1" in
+  status)
+    print_status
+    ;;
+  toggle)
+    if pgrep -x xss-lock >/dev/null; then
+      killall xss-lock
+    else
+      xss-lock -- i3lock -c 000000 &
+    fi
+    sleep 0.2
+    print_status
+    ;;
+  lock)
+    i3lock -c 000000
+    ;;
+  *)
+    echo "Usage: $0 {status|toggle|lock}"
+    exit 1
+    ;;
+esac

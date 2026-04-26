@@ -169,14 +169,9 @@ generate_colors_from_wallpaper() {
     echo "Processing templates..."
     mkdir -p "$OUTPUT_DIR"
 
-    process_template "$TEMPLATES_DIR/waybar.css" "$OUTPUT_DIR/waybar.css"
-    process_template "$TEMPLATES_DIR/hyprland.conf" "$OUTPUT_DIR/hyprland.conf"
-    process_template "$TEMPLATES_DIR/mako.ini" "$OUTPUT_DIR/mako.ini"
     process_template "$TEMPLATES_DIR/ghostty.conf" "$OUTPUT_DIR/ghostty.conf"
     process_template "$TEMPLATES_DIR/btop.theme" "$OUTPUT_DIR/btop.theme"
-    process_template "$TEMPLATES_DIR/swayosd.css" "$OUTPUT_DIR/swayosd.css"
-    process_template "$TEMPLATES_DIR/walker.css" "$OUTPUT_DIR/walker.css"
-    process_template "$TEMPLATES_DIR/hyprlock.conf" "$OUTPUT_DIR/hyprlock.conf"
+    process_template "$TEMPLATES_DIR/dunstrc" "$OUTPUT_DIR/dunstrc"
     process_template "$TEMPLATES_DIR/gtk.css" "$OUTPUT_DIR/gtk.css"
 
     echo

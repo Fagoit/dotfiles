@@ -49,7 +49,7 @@ fi
 
 # Detect and configure NVIDIA if present
 if has_nvidia_gpu; then
-  log_info "NVIDIA GPU detected, configuring for Hyprland..."
+  log_info "NVIDIA GPU detected, configuring driver support..."
   bash "$SCRIPT_DIR/setup-nvidia"
 fi
 
@@ -107,10 +107,20 @@ if is_installed "ly"; then
   [ -f "/etc/ly/config.ini" ] && backup_file "/etc/ly/config.ini"
   sudo rm -f /etc/ly/config.ini
   sudo cp "$DOTFILES_DIR/default/ly/config.ini" /etc/ly/config.ini
+  sudo systemctl enable ly.service
 
   log_success "ly display manager configured"
 else
   log_detail "ly not installed, skipping"
+fi
+
+# Install WindowMaker X session for ly and other display managers
+if [ -f "$DOTFILES_DIR/default/xsessions/windowmaker-dotfiles.desktop" ]; then
+  log_info "Installing WindowMaker X session..."
+  sudo mkdir -p /usr/share/xsessions
+  [ -f "/usr/share/xsessions/windowmaker-dotfiles.desktop" ] && backup_file "/usr/share/xsessions/windowmaker-dotfiles.desktop"
+  sudo cp "$DOTFILES_DIR/default/xsessions/windowmaker-dotfiles.desktop" /usr/share/xsessions/windowmaker-dotfiles.desktop
+  log_success "WindowMaker X session installed"
 fi
 
 # Remove wait on network from system startup
@@ -134,12 +144,7 @@ systemctl --user daemon-reload 2>/dev/null || log_detail "Failed to reload syste
 
 USER_SERVICES=(
   "elephant.service"
-  "mako.service"
-  "sunsetr.service"
-  "swayosd.service"
-  "walker.service"
-  "waybar.service"
-  "hyprpaper.service"
+  "dunst.service"
 )
 
 for service in "${USER_SERVICES[@]}"; do
@@ -150,6 +155,6 @@ for service in "${USER_SERVICES[@]}"; do
   fi
 done
 
-log_detail "Services will start on next login or Hyprland restart"
+log_detail "Services will start on next WindowMaker login"
 
 log_success "System configuration complete!"

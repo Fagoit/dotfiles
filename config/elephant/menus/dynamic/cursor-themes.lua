@@ -54,9 +54,9 @@ function GetEntries()
 						Subtext = comment ~= "" and comment or theme_name,
 						Value = theme_name,
 						Actions = {
-							apply = "hyprctl setcursor '"
+							apply = "gsettings set org.gnome.desktop.interface cursor-theme '"
 								.. theme_name
-								.. "' 24 && notify-send 'Cursor Theme' 'Set to "
+								.. "' && xsetroot -cursor_name left_ptr && notify-send 'Cursor Theme' 'Set to "
 								.. display_name
 								.. "'",
 						},

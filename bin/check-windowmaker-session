@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ "${XDG_CURRENT_DESKTOP:-}" != "WindowMaker" ]; then
+  notify-send \
+    --app-name="WindowMaker Session" \
+    --urgency=critical \
+    --expire-time=0 \
+    --icon=dialog-warning \
+    "WindowMaker session warning" \
+    "Select 'WindowMaker (dotfiles)' in ly so PATH and X11 helpers are initialized."
+fi

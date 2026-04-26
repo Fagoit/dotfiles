@@ -134,8 +134,6 @@ CURRENT_STEP=$((CURRENT_STEP + 1))
 log_step "[$CURRENT_STEP/$TOTAL_STEPS] Configuring system"
 bash "$SCRIPT_DIR/setup-system"
 
-hyprctl reload 2>/dev/null || log_detail "Hyprland not running, skipping reload"
-
 END_TIME=$(date +%s)
 TOTAL_TIME=$((END_TIME - START_TIME))
 MINUTES=$((TOTAL_TIME / 60))
@@ -173,7 +171,7 @@ gum confirm \
   --selected.background=2 \
   --affirmative="OK" \
   --negative="" \
-  "You have to pick Hyprland (uwsm-managed) in your login manager (like sddm, gdm, ly). Otherwise scripts will not be in PATH and will NOT WORK" || true
+  "Pick WindowMaker (dotfiles) in ly on your next login. That session sets PATH and starts the X11 helpers used by these dotfiles." || true
 
 echo
 if ask_yes_no "Reboot now?"; then

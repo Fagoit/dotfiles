@@ -5,7 +5,7 @@ Cache = false
 
 function SetWallpaper(value)
 	os.execute("ln -nsf '" .. value .. "' ~/.local/share/dotfiles/current/background")
-	os.execute("systemctl --user restart hyprpaper.service")
+	os.execute("bash ~/.local/share/dotfiles/bin/x-wallpaper")
 end
 
 function GetEntries()

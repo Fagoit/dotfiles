@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=WindowMaker (dotfiles)
+Comment=Start WindowMaker with the dotfiles X11 session
+Exec=/bin/sh -c "exec \\$HOME/.local/share/dotfiles/bin/start-windowmaker"
+TryExec=/usr/bin/wmaker
+Type=Application

@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+THEMES_DIR="$HOME/.local/share/dotfiles/themes"
+
+theme=$(
+  for dir in "$THEMES_DIR"/*; do
+    [ -d "$dir" ] && basename "$dir"
+  done | sort | rofi -dmenu -p "Theme"
+)
+
+[ -n "$theme" ] && theme-set "$theme"

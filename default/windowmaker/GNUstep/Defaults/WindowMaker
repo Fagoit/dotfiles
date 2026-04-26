@@ -1,0 +1,9 @@
+{
+  IconSize = 64;
+  WorkspaceNameDisplayPosition = center;
+  WorkspaceCount = 4;
+  WorkspaceNames = ("Main", "Web", "Files", "Media");
+  DisableDock = NO;
+  DisableClip = NO;
+  ColormapMode = auto;
+}
