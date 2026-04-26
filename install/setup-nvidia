@@ -32,7 +32,7 @@ done
 # Use the prebuilt module when a single standard kernel is installed,
 # otherwise fall back to DKMS so every kernel gets a matching module.
 if [ "${#INSTALLED_KERNELS[@]}" -eq 1 ] && [ "${INSTALLED_KERNELS[0]}" = "linux" ]; then
-    NVIDIA_DRIVER="nvidia"
+    NVIDIA_DRIVER="nvidia-open"
 elif [ "${#INSTALLED_KERNELS[@]}" -eq 1 ] && [ "${INSTALLED_KERNELS[0]}" = "linux-lts" ]; then
     NVIDIA_DRIVER="nvidia-lts"
 else
