@@ -25,7 +25,7 @@ Fork of [MacieJonos/dotfiles](https://github.com/MacieJonos/dotfiles) (now archi
 ## Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Fagoit/dotfiles/master/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Fagoit/dotfiles/windowmaker/setup.sh | bash
 ```
 
 This is intended for Arch Linux. The installer backs up changed files first, installs packages from [install/pkgs.txt](install/pkgs.txt), copies configs, installs the `WindowMaker (dotfiles)` X session, and configures `ly` when it is present.
