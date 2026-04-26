@@ -38,6 +38,7 @@ hyprlang
 hyprlock
 hyprpaper
 hyprpicker
+hyprshot
 hyprtoolkit
 hyprutils
 hyprwayland-scanner
