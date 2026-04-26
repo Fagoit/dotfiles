@@ -21,7 +21,7 @@ done
 if [ "${#INSTALLED_KERNELS[@]}" -eq 0 ]; then
     log_error "No supported kernel detected; skipping NVIDIA driver install"
     log_error "Install one of: linux, linux-lts, linux-zen, linux-hardened, then rerun"
-    exit 1
+    exit 0
 fi
 
 HEADER_PKGS=()
@@ -53,7 +53,10 @@ NVIDIA_PACKAGES=(
     "qt6-wayland"
 )
 
-spinner "Installing NVIDIA packages..." sudo pacman -S --needed --noconfirm "${NVIDIA_PACKAGES[@]}"
+if ! spinner "Installing NVIDIA packages..." sudo pacman -S --needed --noconfirm "${NVIDIA_PACKAGES[@]}"; then
+    log_error "NVIDIA package install failed; skipping NVIDIA configuration"
+    exit 0
+fi
 log_success "NVIDIA packages installed"
 
 # Configure mkinitcpio for early loading
