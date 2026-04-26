@@ -5,9 +5,47 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source "$SCRIPT_DIR/lib/helpers.sh"
 source "$SCRIPT_DIR/lib/backup.sh"
 
-# Install additional NVIDIA packages
-log_info "Installing additional NVIDIA packages..."
+# Determine appropriate NVIDIA kernel driver package based on installed kernels.
+# nvidia-utils alone does NOT provide the kernel module; without the driver
+# package, mkinitcpio -P later in this script fails with
+# "ERROR: module not found: 'nvidia'".
+log_info "Detecting installed kernels for NVIDIA driver selection..."
+
+INSTALLED_KERNELS=()
+for k in linux linux-lts linux-zen linux-hardened; do
+    if is_installed "$k"; then
+        INSTALLED_KERNELS+=("$k")
+    fi
+done
+
+if [ "${#INSTALLED_KERNELS[@]}" -eq 0 ]; then
+    log_error "No supported kernel detected; skipping NVIDIA driver install"
+    log_error "Install one of: linux, linux-lts, linux-zen, linux-hardened, then rerun"
+    exit 1
+fi
+
+HEADER_PKGS=()
+for k in "${INSTALLED_KERNELS[@]}"; do
+    HEADER_PKGS+=("${k}-headers")
+done
+
+# Use the prebuilt module when a single standard kernel is installed,
+# otherwise fall back to DKMS so every kernel gets a matching module.
+if [ "${#INSTALLED_KERNELS[@]}" -eq 1 ] && [ "${INSTALLED_KERNELS[0]}" = "linux" ]; then
+    NVIDIA_DRIVER="nvidia"
+elif [ "${#INSTALLED_KERNELS[@]}" -eq 1 ] && [ "${INSTALLED_KERNELS[0]}" = "linux-lts" ]; then
+    NVIDIA_DRIVER="nvidia-lts"
+else
+    NVIDIA_DRIVER="nvidia-dkms"
+fi
+
+log_detail "Kernels: ${INSTALLED_KERNELS[*]}"
+log_detail "Driver package: $NVIDIA_DRIVER"
+
+log_info "Installing NVIDIA driver and support packages..."
 NVIDIA_PACKAGES=(
+    "$NVIDIA_DRIVER"
+    "${HEADER_PKGS[@]}"
     "nvidia-utils"
     "egl-wayland"
     "libva-nvidia-driver"
