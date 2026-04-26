@@ -48,7 +48,6 @@ default = [
   "menus:starship_themes",
   "menus:system-themes",
   "menus:waybar-themes",
-  "menus:ollama",
   "menus:postgres",
   "menus:screenshots",
   "menus:transcode",

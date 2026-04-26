@@ -15,13 +15,6 @@ function GetEntries()
 			},
 		},
 		{
-			Text = "Ollama",
-			Icon = "",
-			Actions = {
-				["ollama"] = "walker --theme menus -m menus:ollama -N",
-			},
-		},
-		{
 			Text = "Download video",
 			Icon = "",
 			Actions = {
@@ -47,13 +40,6 @@ function GetEntries()
 			Icon = "",
 			Actions = {
 				["backups"] = "walker --theme menus -m menus:backups -N",
-			},
-		},
-		{
-			Text = "Add a webapp",
-			Icon = "",
-			Actions = {
-				["webapp-install"] = "ghostty --class=local.floating -e webapp-install",
 			},
 		},
 	}
