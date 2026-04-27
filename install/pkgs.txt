@@ -27,6 +27,7 @@ zsh
 
 # Development
 git
+obsidian
 
 # Hyprland
 hyprcursor
