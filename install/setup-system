@@ -47,10 +47,14 @@ else
   log_detail "UFW not installed, skipping firewall configuration"
 fi
 
-# Detect and configure NVIDIA if present
+# Detect and optionally install/configure NVIDIA proprietary driver
 if has_nvidia_gpu; then
-  log_info "NVIDIA GPU detected, configuring for Hyprland..."
-  bash "$SCRIPT_DIR/setup-nvidia"
+  log_info "NVIDIA GPU detected."
+  if ask_yes_no "Install NVIDIA proprietary driver (packages + mkinitcpio)?"; then
+    bash "$SCRIPT_DIR/setup-nvidia"
+  else
+    log_detail "Skipping NVIDIA driver install"
+  fi
 fi
 
 # Configure git user
