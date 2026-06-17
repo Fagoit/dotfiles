@@ -13,6 +13,10 @@ background-opacity = 0.8
 confirm-close-surface=false
 resize-overlay = never
 mouse-hide-while-typing = true
+# Drop Ghostty's own GTK header bar + rounded CSD corners so only WindowMaker's
+# (square) titlebar shows.
+gtk-titlebar = false
+window-decoration = false
 
 # Cursor styling
 cursor-style = "block"

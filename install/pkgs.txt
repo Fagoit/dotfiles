@@ -1,5 +1,6 @@
 # System & Security
 gnome-keyring
+libnotify
 ly
 openssh
 polkit-gnome
@@ -20,6 +21,7 @@ fd
 fzf
 ghostty
 jq
+ranger
 pv
 ripgrep
 starship
@@ -37,10 +39,13 @@ xorg-xrandr
 xorg-xrdb
 xorg-xset
 xorg-xsetroot
+xorg-xgamma
+xorg-fonts-misc
 xorg-xprop
 xorg-xwininfo
 xbindkeys
 xdotool
+wmctrl
 picom
 feh
 maim
@@ -49,17 +54,16 @@ xclip
 xss-lock
 i3lock
 rofi
+xwinwrap-git
 dunst
 xdg-desktop-portal-gtk
 
 # Desktop UI & Utilities
 impala
 imagemagick
-matugen
 satty
 tesseract
 tesseract-data-eng
-tinte
 zenity
 
 # Screen Recording & Video
@@ -101,6 +105,15 @@ otf-font-awesome
 ttf-cascadia-mono-nerd
 papirus-icon-theme
 yaru-icon-theme
+
+# Dynamic theming + display tweaks
+python-pywal16
+vibrant-cli
+
+# WindowMaker dockapps (built from source by install/setup-dockapps)
+intltool
+imlib2
+libdockapp
 
 # Applications
 mpv

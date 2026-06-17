@@ -16,15 +16,17 @@
   Mod4 + Alt + space
 
 "i3lock -c 000000"
-  XF86Lock
-
-"i3lock -c 000000"
   Mod4 + Escape
 
-"maim -s | xclip -selection clipboard -t image/png"
+# Toggle fullscreen on the active window (rescues apps like Telegram that
+# launch fullscreen with no titlebar). Falls back to un-maximize via xdotool.
+"wmctrl -r :ACTIVE: -b toggle,fullscreen 2>/dev/null || xdotool getactivewindow windowsize 60% 60% windowmove --relative -- 0 0"
+  Mod4 + f
+
+"bash \"$HOME/.local/share/dotfiles/bin/x-screenshot\" area-clip"
   Mod4 + Shift + s
 
-"bash -lc 'mkdir -p \"$HOME/Pictures\"; maim -s \"$HOME/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png\" && notify-send \"Saved Screenshot\"'"
+"bash \"$HOME/.local/share/dotfiles/bin/x-screenshot\" area-file"
   Print
 
 "pamixer -i 5 && notify-send \"Volume\" \"$(pamixer --get-volume)%\""

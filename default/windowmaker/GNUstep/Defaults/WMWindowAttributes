@@ -1,2 +1,67 @@
 {
+  "vesktop.vesktop" = {
+    Icon = "discord.png";
+    AlwaysUserIcon = Yes;
+    IgnoreDecorationChanges = Yes;
+  };
+  "spotify.Spotify" = {
+    Icon = "spotify.png";
+    AlwaysUserIcon = Yes;
+    IgnoreDecorationChanges = Yes;
+  };
+  "mullvad vpn.Mullvad VPN" = {
+    Icon = "mullvad-vpn.png";
+    AlwaysUserIcon = Yes;
+    IgnoreDecorationChanges = Yes;
+  };
+  "easyeffects.easyeffects" = {
+    Icon = "easyeffects.png";
+    AlwaysUserIcon = Yes;
+    IgnoreDecorationChanges = Yes;
+  };
+  "librewolf.librewolf" = {
+    Icon = "librewolf.png";
+    AlwaysUserIcon = Yes;
+    IgnoreDecorationChanges = Yes;
+  };
+  "Navigator.librewolf" = {
+    Icon = "librewolf.png";
+    AlwaysUserIcon = Yes;
+    IgnoreDecorationChanges = Yes;
+  };
+  "ghostty.ghostty" = {
+    Icon = "ghostty.png";
+    AlwaysUserIcon = Yes;
+    IgnoreDecorationChanges = Yes;
+  };
+  "ghostty.com.mitchellh.ghostty" = {
+    Icon = "ghostty.png";
+    AlwaysUserIcon = Yes;
+    IgnoreDecorationChanges = Yes;
+  };
+  "com.mitchellh.ghostty.com.mitchellh.ghostty" = {
+    Icon = "ghostty.png";
+    AlwaysUserIcon = Yes;
+    IgnoreDecorationChanges = Yes;
+  };
+  "org.gnome.Nautilus.org.gnome.Nautilus" = {
+    Icon = "nautilus.png";
+    AlwaysUserIcon = Yes;
+    IgnoreDecorationChanges = Yes;
+  };
+  "cursor.cursor" = {
+    IgnoreDecorationChanges = Yes;
+  };
+  "telegram-desktop.TelegramDesktop" = {
+    IgnoreDecorationChanges = Yes;
+  };
+  Logo.WMDock = {
+    Icon = "Naruto.png";
+  };
+  Logo.WMClip = {
+    Icon = "One-Piece-anime.png";
+  };
+  default.default = {
+    Icon = "Sword-Art-Online.png";
+  };
 }

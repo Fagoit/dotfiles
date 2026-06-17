@@ -96,22 +96,47 @@ if [ -z "$CURRENT_GIT_EMAIL" ]; then
   fi
 fi
 
-# ly display manager configuration
-if is_installed "ly"; then
-  log_info "Configuring ly display manager..."
-  sudo mkdir -p /etc/systemd/system/ly.service.d
-  [ -f "/etc/systemd/system/ly.service.d/override.conf" ] && backup_file "/etc/systemd/system/ly.service.d/override.conf"
-  sudo cp "$DOTFILES_DIR/default/ly/override.conf" /etc/systemd/system/ly.service.d/override.conf
-  sudo systemctl daemon-reload
+# Display manager configuration.
+# The dotfiles default to ly, but any display manager that reads
+# /usr/share/xsessions (sddm, gdm, lightdm, ...) can launch the WindowMaker
+# session installed below. Only (re)configure ly when it is installed AND no
+# other display manager is already enabled, so we never fight an existing
+# setup. Everything here is best-effort and must not abort the installer.
+CURRENT_DM=""
+if [ -e /etc/systemd/system/display-manager.service ]; then
+  CURRENT_DM=$(basename "$(readlink -f /etc/systemd/system/display-manager.service)")
+fi
+
+# Modern ly ships a templated unit (ly@.service); older ly used ly.service.
+LY_UNIT=""
+if systemctl cat ly.service &>/dev/null; then
+  LY_UNIT="ly.service"
+elif systemctl cat 'ly@.service' &>/dev/null; then
+  LY_UNIT="ly@tty2.service"
+fi
+LY_DROPIN="/etc/systemd/system/${LY_UNIT%.service}.service.d"
+
+if [ -n "$CURRENT_DM" ] && [ "$CURRENT_DM" != "ly.service" ] && [[ "$CURRENT_DM" != ly@* ]]; then
+  log_detail "Display manager '$CURRENT_DM' already enabled; leaving it in place"
+  log_detail "Pick 'WindowMaker (dotfiles)' from its session list at login"
+elif is_installed "ly" && [ -n "$LY_UNIT" ]; then
+  log_info "Configuring ly display manager ($LY_UNIT)..."
+  sudo mkdir -p "$LY_DROPIN"
+  [ -f "$LY_DROPIN/override.conf" ] && backup_file "$LY_DROPIN/override.conf"
+  sudo cp "$DOTFILES_DIR/default/ly/override.conf" "$LY_DROPIN/override.conf"
+  sudo systemctl daemon-reload || true
 
   [ -f "/etc/ly/config.ini" ] && backup_file "/etc/ly/config.ini"
   sudo rm -f /etc/ly/config.ini
   sudo cp "$DOTFILES_DIR/default/ly/config.ini" /etc/ly/config.ini
-  sudo systemctl enable ly.service
 
-  log_success "ly display manager configured"
+  if sudo systemctl enable "$LY_UNIT"; then
+    log_success "ly display manager configured ($LY_UNIT)"
+  else
+    log_detail "Could not enable $LY_UNIT; configure your display manager manually"
+  fi
 else
-  log_detail "ly not installed, skipping"
+  log_detail "ly not installed/available, skipping display manager setup"
 fi
 
 # Install WindowMaker X session for ly and other display managers
@@ -120,6 +145,10 @@ if [ -f "$DOTFILES_DIR/default/xsessions/windowmaker-dotfiles.desktop" ]; then
   sudo mkdir -p /usr/share/xsessions
   [ -f "/usr/share/xsessions/windowmaker-dotfiles.desktop" ] && backup_file "/usr/share/xsessions/windowmaker-dotfiles.desktop"
   sudo cp "$DOTFILES_DIR/default/xsessions/windowmaker-dotfiles.desktop" /usr/share/xsessions/windowmaker-dotfiles.desktop
+  # Expose the launcher on PATH so the .desktop Exec can reference it by bare
+  # name. This avoids relying on display managers (ly) to expand $HOME or to
+  # implement freedesktop Exec unescaping.
+  sudo ln -sf "$DOTFILES_DIR/bin/start-windowmaker" /usr/local/bin/start-windowmaker
   log_success "WindowMaker X session installed"
 fi
 
@@ -134,6 +163,24 @@ systemctl --user enable --now gcr-ssh-agent.socket
 # Setup systemd user services
 log_info "Setting up systemd user services..."
 mkdir -p "$HOME/.config/systemd/user"
+
+# Disable and remove obsolete Wayland-era user services left over from the
+# Hyprland setup so they don't fail noisily on the X11 graphical session.
+OBSOLETE_SERVICES=(
+  "waybar.service"
+  "walker.service"
+  "swayosd.service"
+  "mako.service"
+  "hypridle.service"
+  "hyprpaper.service"
+  "sunsetr.service"
+)
+
+for service in "${OBSOLETE_SERVICES[@]}"; do
+  systemctl --user disable --now "$service" &>/dev/null || true
+  rm -f "$HOME/.config/systemd/user/$service"
+  rm -f "$HOME/.config/systemd/user/graphical-session.target.wants/$service"
+done
 
 if [ -d "$DOTFILES_DIR/default/systemd/user" ]; then
   cp -f "$DOTFILES_DIR/default/systemd/user/"*.service "$HOME/.config/systemd/user/" 2>/dev/null || true

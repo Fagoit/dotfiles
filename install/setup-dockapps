@@ -1,0 +1,63 @@
+#!/bin/bash
+
+set -e
+
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+source "$SCRIPT_DIR/lib/helpers.sh"
+
+# WindowMaker dock applications, built from the upstream collection and
+# installed into ~/.local/bin (no root required). Ported from
+# Roel-6/wmaker-dotfiles, which uses window-maker/dockapps.
+
+DOCKAPPS_REPO="https://github.com/window-maker/dockapps"
+BUILD_DIR="$(mktemp -d)"
+BIN_DIR="$HOME/.local/bin"
+
+cleanup() { rm -rf "$BUILD_DIR"; }
+trap cleanup EXIT
+
+mkdir -p "$BIN_DIR"
+
+log_info "Cloning WindowMaker dockapps..."
+git clone --depth 1 "$DOCKAPPS_REPO" "$BUILD_DIR/dockapps" >/dev/null 2>&1
+
+build_simple() {
+  # $1 = dir, $2 = built binary path (relative), $3 = installed name
+  local dir="$1" built="$2" name="$3"
+  log_step "Building $name"
+  if (cd "$BUILD_DIR/dockapps/$dir" && make) >/dev/null 2>&1 &&
+    [ -f "$BUILD_DIR/dockapps/$dir/$built" ]; then
+    install -m 0755 "$BUILD_DIR/dockapps/$dir/$built" "$BIN_DIR/$name"
+    log_success "$name -> $BIN_DIR/$name"
+  else
+    log_error "Failed to build $name"
+  fi
+}
+
+build_autotools() {
+  # $1 = dir, $2 = built binary path (relative), $3 = installed name
+  local dir="$1" built="$2" name="$3"
+  log_step "Building $name"
+  if (cd "$BUILD_DIR/dockapps/$dir" &&
+    { ./autogen 2>/dev/null || ./autogen.sh 2>/dev/null || autoreconf -fi; } &&
+    ./configure && make) >/dev/null 2>&1 &&
+    [ -f "$BUILD_DIR/dockapps/$dir/$built" ]; then
+    install -m 0755 "$BUILD_DIR/dockapps/$dir/$built" "$BIN_DIR/$name"
+    log_success "$name -> $BIN_DIR/$name"
+  else
+    log_error "Failed to build $name (check build deps)"
+  fi
+}
+
+build_simple   "AlsaMixer.app" "AlsaMixer.app" "alsamixer.app"
+build_autotools "wmCalClock"   "Src/wmCalClock" "wmCalClock"
+# buttonmaker needs intltool + libdockapp (see pkgs.txt).
+build_autotools "buttonmaker"  "src/buttonmaker" "buttonmaker"
+
+# Extra "cool" meters/eye-candy.
+build_autotools "wmmon"        "wmmon"          "wmmon"
+build_autotools "wmnet"        "wmnet"          "wmnet"
+build_autotools "wmmoonclock"  "wmmoonclock"    "wmmoonclock"
+
+log_success "Dockapps installed to $BIN_DIR"
+log_info "Drag each one into the Dock once; WindowMaker will remember them."

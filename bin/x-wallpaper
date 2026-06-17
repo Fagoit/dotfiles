@@ -1,16 +1,101 @@
 #!/bin/bash
-set -e
+# Apply the current wallpaper on X11.
+#
+# Supports both static images (via feh) and animated video wallpapers
+# (via xwinwrap + mpv). The wallpaper to apply is whatever
+# current/background resolves to.
 
 CURRENT_BACKGROUND_LINK="$HOME/.local/share/dotfiles/current/background"
+MPV_MARKER="x-wallpaper-mpv"
+MPV_IPC="/tmp/.x-wallpaper-mpv.sock"
 
-if [ -L "$CURRENT_BACKGROUND_LINK" ] || [ -f "$CURRENT_BACKGROUND_LINK" ]; then
+if [ -e "$CURRENT_BACKGROUND_LINK" ]; then
   wallpaper=$(readlink -f "$CURRENT_BACKGROUND_LINK")
-elif [ -f "$CURRENT_BACKGROUND_LINK" ]; then
-  wallpaper="$CURRENT_BACKGROUND_LINK"
 else
   wallpaper=""
 fi
 
-if [ -n "$wallpaper" ] && [ -f "$wallpaper" ] && command -v feh >/dev/null 2>&1; then
-  feh --bg-fill "$wallpaper"
-fi
+[ -n "$wallpaper" ] && [ -f "$wallpaper" ] || exit 0
+
+# Always tear down any running animated wallpaper before applying a new one,
+# so switching wallpapers/themes never stacks multiple players.
+pkill -f "$MPV_MARKER" 2>/dev/null || true
+pkill -x xwinwrap 2>/dev/null || true
+
+ext="${wallpaper##*.}"
+ext="${ext,,}"
+
+WALREFRESH="$HOME/.local/share/dotfiles/bin/walrefresh"
+
+# Derive a color palette from an image and retheme rofi/dunst/picom to match it.
+# pywal can only read still images, so video callers pass a sampled frame.
+# Runs in the background so it never delays the wallpaper appearing.
+generate_colors() {
+  command -v wal >/dev/null 2>&1 || return 0
+  local src="$1"
+  [ -f "$src" ] || return 0
+  (wal -i "$src" -n -q -e -o "$WALREFRESH" >/dev/null 2>&1 || true) &
+}
+
+# Launch one animated wallpaper instance bound to a specific geometry.
+# Each monitor gets its own player so the video is not stretched across the
+# whole X screen. panscan=1.0 fills the monitor (cropping minimally).
+start_video() {
+  local geom="$1" tag="$2"
+  setsid xwinwrap -g "$geom" -ov -ni -nf -b -un -s -st -sp -- \
+    mpv --wid=%WID \
+    --input-ipc-server="${MPV_IPC%.sock}-${tag}.sock" \
+    --force-media-title="$MPV_MARKER" \
+    --loop-file=inf \
+    --no-audio \
+    --no-osc --no-osd-bar \
+    --no-input-default-bindings \
+    --panscan=1.0 \
+    --hwdec=auto-safe \
+    --cache=no \
+    --demuxer-max-bytes=8MiB \
+    --demuxer-max-back-bytes=4MiB \
+    --really-quiet \
+    "$wallpaper" >/dev/null 2>&1 &
+}
+
+case "$ext" in
+mp4 | mkv | webm | mov | avi | m4v | gif)
+  # Animated video wallpaper.
+  if command -v xwinwrap >/dev/null 2>&1 && command -v mpv >/dev/null 2>&1; then
+    # Paint the root black so nothing flashes through while mpv spins up.
+    command -v xsetroot >/dev/null 2>&1 && xsetroot -solid '#000000'
+
+    # One player per connected monitor, sized to that monitor's geometry.
+    mapfile -t geoms < <(xrandr --query 2>/dev/null | grep -oE '[0-9]+x[0-9]+\+[0-9]+\+[0-9]+')
+
+    if [ "${#geoms[@]}" -gt 0 ]; then
+      i=0
+      for geom in "${geoms[@]}"; do
+        start_video "$geom" "$i"
+        i=$((i + 1))
+      done
+    else
+      # Fallback: no xrandr geometry, cover the whole screen.
+      dim=$(xdpyinfo 2>/dev/null | awk '/dimensions:/{print $2}')
+      start_video "${dim:-1920x1080}+0+0" "0"
+    fi
+  elif command -v feh >/dev/null 2>&1; then
+    # No animated backend available; at least clear the root.
+    command -v xsetroot >/dev/null 2>&1 && xsetroot -solid '#000000'
+  fi
+
+  # Sample a frame so pywal can derive colors that match the moving wallpaper.
+  if command -v ffmpeg >/dev/null 2>&1; then
+    frame="/tmp/.x-wallpaper-frame.png"
+    if ffmpeg -y -ss 1 -i "$wallpaper" -frames:v 1 -vf 'scale=640:-1' "$frame" >/dev/null 2>&1; then
+      generate_colors "$frame"
+    fi
+  fi
+  ;;
+*)
+  # Static image wallpaper (feh fills each monitor independently).
+  command -v feh >/dev/null 2>&1 && feh --bg-fill "$wallpaper"
+  generate_colors "$wallpaper"
+  ;;
+esac

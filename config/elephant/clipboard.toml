@@ -1,4 +1,8 @@
 icon = "" 
 max_items = 500
+# Don't re-own/re-copy the clipboard. On X11 elephant's recopy mishandles binary
+# image data, which crashes Electron apps (Discord) when pasting a screenshot.
+# With this off, xclip stays the clipboard owner and images paste cleanly.
+recopy = false
 image_editor_cmd = "satty -f %FILE% -o %FILE%"
 text_editor_cmd = "ghostty -e nvim '%FILE%'"

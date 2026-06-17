@@ -13,9 +13,7 @@ if [[ "$1" == "--dry-run" ]]; then
   DRY_RUN=true
 fi
 
-EXCLUDES=(
-  "tinte/settings.json"
-)
+EXCLUDES=()
 
 is_excluded() {
   local rel_path="$1"

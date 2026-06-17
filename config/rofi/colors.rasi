@@ -1,0 +1,14 @@
+/*
+ * Default purple palette. pywal (bin/walrefresh) overwrites this with a symlink
+ * to ~/.cache/wal/colors-rofi.rasi once colors are generated from the wallpaper.
+ */
+
+* {
+    bg:        rgba(12, 8, 20, 0.96);
+    bg-alt:    #1e1430;
+    sel:       #a96bff;
+    fg:        #eae6f5;
+    accent:    #c79bff;
+    border-c:  #7c3aed;
+    dim:       #8a7da6;
+}

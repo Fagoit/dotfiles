@@ -7,23 +7,11 @@ choice=$(printf '%s\n' \
   "Fullscreen to clipboard" \
   "Fullscreen to file" | rofi -dmenu -p "Screenshot")
 
+SHOT="$(dirname "$(readlink -f "$0")")/x-screenshot"
+
 case "$choice" in
-  "Area to clipboard")
-    maim -s | xclip -selection clipboard -t image/png
-    notify-send "Copied Area"
-    ;;
-  "Area to file")
-    mkdir -p "$HOME/Pictures"
-    maim -s "$HOME/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png"
-    notify-send "Saved Screenshot"
-    ;;
-  "Fullscreen to clipboard")
-    maim | xclip -selection clipboard -t image/png
-    notify-send "Copied Fullscreen"
-    ;;
-  "Fullscreen to file")
-    mkdir -p "$HOME/Pictures"
-    maim "$HOME/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png"
-    notify-send "Saved Fullscreen"
-    ;;
+  "Area to clipboard")      bash "$SHOT" area-clip ;;
+  "Area to file")           bash "$SHOT" area-file ;;
+  "Fullscreen to clipboard") bash "$SHOT" full-clip ;;
+  "Fullscreen to file")     bash "$SHOT" full-file ;;
 esac

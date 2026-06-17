@@ -1,0 +1,24 @@
+[global]
+    frame_width = 2
+    separator_height = 2
+    padding = 12
+    horizontal_padding = 12
+    font = CaskaydiaMono Nerd Font Mono 10
+    corner_radius = 8
+    origin = top-right
+    offset = 12x36
+
+[urgency_low]
+    background = "#1e1e1e"
+    foreground = "#8a8a8d"
+    frame_color = "#8a8a8d"
+
+[urgency_normal]
+    background = "#1e1e1e"
+    foreground = "#8a8a8d"
+    frame_color = "#8a8a8d"
+
+[urgency_critical]
+    background = "#1e1e1e"
+    foreground = "#8a8a8d"
+    frame_color = "#ea6962"

@@ -6,4 +6,77 @@
   DisableDock = NO;
   DisableClip = NO;
   ColormapMode = auto;
+
+  ModifierKey = "Mod4";
+
+  CloseKey = "Mod4+w";
+  MiniaturizeKey = "Mod4+n";
+  HideKey = "Mod4+h";
+  MoveResizeKey = "Mod4+m";
+  MaximizeKey = "Mod4+Up";
+  VMaximizeKey = "Mod4+Shift+Up";
+  HMaximizeKey = "Mod4+Shift+Down";
+  ShadeKey = "Mod4+s";
+  FocusNextKey = "Mod4+Tab";
+  FocusPrevKey = "Mod4+Shift+Tab";
+  WindowListKey = "Mod4+grave";
+  WindowMenuKey = "Mod4+space";
+
+  NextWorkspaceKey = "Mod4+Right";
+  PrevWorkspaceKey = "Mod4+Left";
+  Workspace1Key = "Mod4+1";
+  Workspace2Key = "Mod4+2";
+  Workspace3Key = "Mod4+3";
+  Workspace4Key = "Mod4+4";
+  MoveToWorkspace1Key = "Mod4+Shift+1";
+  MoveToWorkspace2Key = "Mod4+Shift+2";
+  MoveToWorkspace3Key = "Mod4+Shift+3";
+  MoveToWorkspace4Key = "Mod4+Shift+4";
+
+  /* ---- Purple rice (ported from Roel-6 "Cutie patootie", pink -> purple) ---- */
+  TitleJustify = center;
+  AntialiasedText = YES;
+  WindowTitleFont = "Trebuchet MS,sans serif:weight=200:pixelsize=12";
+  MenuTitleFont = "Trebuchet MS,sans serif:bold:pixelsize=12";
+  MenuTextFont = "Trebuchet MS,sans serif:pixelsize=12";
+  IconTitleFont = "Arial,sans serif:pixelsize=9";
+  ClipTitleFont = "Verdana:bold:pixelsize=10";
+  LargeDisplayFont = "Trebuchet MS,sans serif:pixelsize=24";
+
+  FTitleColor = "#666666";
+  FTitleBack = (hgradient, white, "#c79bff");
+  PTitleColor = "#bebebe";
+  PTitleBack = (hgradient, "#c79bff", "#a96bff");
+  UTitleColor = "#cbb8e6";
+  UTitleBack = (hgradient, "#9d5cff", "#5b2a86");
+  ResizebarBack = (hgradient, "#9d5cff", "#5b2a86");
+
+  MenuStyle = normal;
+  MenuTitleColor = "#ffffff";
+  MenuTitleBack = (hgradient, "#c79bff", "#5b2a86");
+  MenuTextColor = "#ffffff";
+  MenuTextBack = (hgradient, "#5b2a86", black);
+  MenuDisabledColor = "#9a8fb0";
+
+  IconBack = (dgradient, "#7e5aa8", "#e8d6ff");
+  IconTitleBack = "#ece0ff";
+  IconTitleColor = "#5b2a86";
+  ClipTitleColor = "#ffffff";
+  CClipTitleColor = "#333333";
+
+  HighlightColor = "#ffffff";
+  HighlightTextColor = "#000000";
+  FrameBorderWidth = 1;
+  FrameBorderColor = "#b6b6b3";
+  FrameFocusedBorderColor = "#a96bff";
+  FrameSelectedBorderColor = "#ffffff";
+
+  WorkspaceBack = (mdgradient, black, black, black, "#1a1030");
+
+  /* ---- Window snapping (drag a window's titlebar to a screen edge) ---- */
+  WindowSnapping = YES;
+  SnapEdgeDetect = 10;
+  SnapCornerDetect = 10;
+  EdgeResistance = 18;
+  SnapToTopMaximizesFullscreen = YES;
 }

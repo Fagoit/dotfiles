@@ -25,7 +25,8 @@ if [ -f "$DOTFILES_DIR/default/xbindkeys/xbindkeysrc" ]; then
 fi
 
 if command -v xrandr &>/dev/null; then
-  log_detail "Monitor layout is managed by X11/xrandr; keep custom xrandr commands in your WindowMaker session if needed"
+  log_detail "Monitors are auto-arranged at login by 'x-monitors' (left-to-right, max refresh)."
+  log_detail "For a custom layout, put raw xrandr commands in ~/.config/dotfiles/monitors.sh"
 fi
 
 log_success "Hardware-specific configuration applied"

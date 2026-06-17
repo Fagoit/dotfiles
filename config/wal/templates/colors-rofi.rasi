@@ -1,0 +1,15 @@
+/*
+ * pywal-generated rofi palette. Rendered to ~/.cache/wal/colors-rofi.rasi and
+ * symlinked to ~/.config/rofi/colors.rasi by bin/walrefresh.
+ * Variable names match config/rofi/colors.rasi (the static purple fallback).
+ */
+
+* {
+    bg:        #{background.strip}F0;
+    bg-alt:    {color0};
+    sel:       {color5};
+    fg:        {foreground};
+    accent:    {color4};
+    border-c:  {color5};
+    dim:       {color8};
+}

@@ -43,21 +43,15 @@ if [ -d "$DOTFILES_DIR/default/windowmaker/GNUstep" ]; then
   log_success "WindowMaker defaults installed"
 fi
 
+if [ -d "$DOTFILES_DIR/default/windowmaker/GNUstep/Library" ]; then
+  log_info "Installing WindowMaker themes..."
+  mkdir -p "$HOME/GNUstep/Library"
+  cp -r "$DOTFILES_DIR/default/windowmaker/GNUstep/Library/"* "$HOME/GNUstep/Library/"
+  log_success "WindowMaker themes installed"
+fi
+
 echo "@import url(\"file://$HOME/.local/share/dotfiles/current/theme/gtk.css\");" >"$HOME/.config/gtk-3.0/gtk.css"
 echo "@import url(\"file://$HOME/.local/share/dotfiles/current/theme/gtk.css\");" >"$HOME/.config/gtk-4.0/gtk.css"
-
-mkdir -p "$HOME/.config/tinte"
-[ -f "$HOME/.config/tinte/settings.json" ] && rm -f "$HOME/.config/tinte/settings.json"
-cat > "$HOME/.config/tinte/settings.json" << EOF
-{
-  "wallpaperFolder": "$HOME/Pictures/dotfiles-wallpapers",
-  "posthookScript": "theme-set",
-  "exportThemeLocation": "$HOME/.config/tinte/exported-themes",
-  "applyThemeLocation": "$HOME/.local/share/dotfiles/themes/tinte",
-  "colorBackend": "imagemagick",
-  "wallpaperBackend": "feh"
-}
-EOF
 
 log_success "Config copied!"
 log_info "Backup saved to: $BACKUP_DIR"

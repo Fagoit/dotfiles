@@ -28,20 +28,6 @@ function GetEntries()
 			},
 		},
 		{
-			Text = "Change themes",
-			Icon = "󰸌",
-			Actions = {
-				["change-themes"] = "theme-menu",
-			},
-		},
-		{
-			Text = "Next background",
-			Icon = "",
-			Actions = {
-				["change-bg"] = "theme-bg-next",
-			},
-		},
-		{
 			Text = "Capture",
 			Icon = "",
 			Actions = {

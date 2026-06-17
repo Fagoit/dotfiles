@@ -1,0 +1,64 @@
+#!/bin/bash
+# Apply the X11 monitor layout for the WindowMaker session.
+#
+# To customize your setup, create ~/.config/dotfiles/monitors.sh containing
+# raw xrandr commands (run `xrandr --query` to see output names). If that file
+# exists it is used verbatim. Otherwise every connected output is auto-arranged
+# left-to-right at its preferred resolution and highest available refresh rate,
+# with the first connected output set as primary.
+
+set -u
+
+USER_CONF="$HOME/.config/dotfiles/monitors.sh"
+
+if [ -f "$USER_CONF" ]; then
+  bash "$USER_CONF"
+  exit $?
+fi
+
+command -v xrandr >/dev/null 2>&1 || exit 0
+
+query=$(xrandr --query)
+
+# Turn off disconnected outputs so a stale "primary" on an unplugged port
+# cannot break the layout.
+while read -r out; do
+  [ -n "$out" ] && xrandr --output "$out" --off 2>/dev/null
+done < <(awk '/ disconnected/{print $1}' <<<"$query")
+
+mapfile -t connected < <(awk '/ connected/{print $1}' <<<"$query")
+[ "${#connected[@]}" -eq 0 ] && exit 0
+
+pos=0
+primary=1
+for out in "${connected[@]}"; do
+  # Preferred mode line is marked with '+'; fall back to the first mode line.
+  line=$(awk -v o="$out" '
+    /^[^ \t]/ { f = ($1 == o) ? 1 : 0; next }
+    f && /\+/ { print; exit }
+  ' <<<"$query")
+  [ -z "$line" ] && line=$(awk -v o="$out" '
+    /^[^ \t]/ { f = ($1 == o) ? 1 : 0; next }
+    f && NF { print; exit }
+  ' <<<"$query")
+  [ -z "$line" ] && continue
+
+  res=$(awk '{print $1}' <<<"$line")
+  # Highest refresh rate listed for the chosen resolution.
+  rate=$(printf '%s\n' $line | tr -d '*+' | grep -E '^[0-9]+(\.[0-9]+)?$' | sort -g | tail -n1)
+
+  mode_args=(--mode "$res")
+  [ -n "$rate" ] && mode_args+=(--rate "$rate")
+
+  if [ "$primary" -eq 1 ]; then
+    xrandr --output "$out" "${mode_args[@]}" --pos "${pos}x0" --primary 2>/dev/null \
+      || xrandr --output "$out" --auto --pos "${pos}x0" --primary 2>/dev/null
+    primary=0
+  else
+    xrandr --output "$out" "${mode_args[@]}" --pos "${pos}x0" 2>/dev/null \
+      || xrandr --output "$out" --auto --pos "${pos}x0" 2>/dev/null
+  fi
+
+  width=${res%%x*}
+  [[ "$width" =~ ^[0-9]+$ ]] && pos=$((pos + width))
+done

@@ -1,0 +1,34 @@
+#!/bin/bash
+# Launch WindowMaker dock applications (from window-maker/dockapps).
+#
+# These appear next to the Dock when first launched; drag each one into the
+# Dock once and WindowMaker will remember it (saved in ~/GNUstep/Defaults).
+# Binaries are expected in ~/.local/bin (see install/setup-dockapps) or PATH.
+
+export PATH="$HOME/.local/bin:$PATH"
+
+launch() {
+  local bin="$1"
+  shift
+  command -v "$bin" >/dev/null 2>&1 || return 0
+  pgrep -x "$bin" >/dev/null 2>&1 && return 0
+  "$bin" "$@" >/dev/null 2>&1 &
+}
+
+# Calendar + clock (purple to match the theme).
+launch wmCalClock -24 -tc "#d9b8ff" -bc "#2a1545"
+# CPU / memory / swap meter.
+launch wmmon
+# Network traffic monitor on the default-route interface (purple tx/rx).
+NETDEV=$(ip route show default 2>/dev/null | awk '/default/{print $5; exit}')
+if [ -n "$NETDEV" ]; then
+  launch wmnet -W "$NETDEV" -t "#c79bff" -r "#a96bff" -F "#eae6f5"
+else
+  launch wmnet -t "#c79bff" -r "#a96bff" -F "#eae6f5"
+fi
+# Moon phase clock (eye candy).
+launch wmmoonclock
+# ALSA volume mixer.
+launch alsamixer.app
+# Launcher-button maker (built by setup-dockapps when its deps are present).
+launch buttonmaker

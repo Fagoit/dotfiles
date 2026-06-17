@@ -1,0 +1,83 @@
+/*
+ * Fullscreen app grid (ported from Roel-6/wmaker-dotfiles fullscreen.rasi).
+ * Fixed purple palette from colors.rasi (rofi is intentionally NOT pywal-driven,
+ * so the launcher always matches the purple WindowMaker theme).
+ */
+
+@import "colors.rasi"
+
+* {
+    background-color: transparent;
+    text-color:       @fg;
+    spacing:          0.4em;
+    border-radius:    0.5em;
+}
+
+window {
+    fullscreen:       true;
+    background-color: @bg;
+    padding:          2.5em 3em;
+    children:         [ inputbar, listview ];
+}
+
+inputbar {
+    margin:           0 28% 1.5em 28%;
+    padding:          0.7em 1.1em;
+    background-color: @bg-alt;
+    border:           2px;
+    border-color:     @border-c;
+    border-radius:    0.7em;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    text-color:       @accent;
+    padding:          0 0.7em 0 0;
+    vertical-align:   0.5;
+}
+
+entry {
+    placeholder:       "Search";
+    placeholder-color: @dim;
+    text-color:        #ffffff;
+    vertical-align:    0.5;
+}
+
+listview {
+    columns:       6;
+    lines:         4;
+    flow:          horizontal;
+    fixed-columns: true;
+    spacing:       1em;
+    padding:       1em;
+    scrollbar:     false;
+}
+
+element {
+    orientation:      vertical;
+    padding:          1em 0.5em;
+    spacing:          0.5em;
+    border-radius:    0.7em;
+    background-color: rgba(124, 58, 237, 0.20);
+    border:           1px;
+    border-color:     @border-c;
+    children:         [ element-icon, element-text ];
+}
+
+element selected {
+    background-color: @sel;
+    border-color:     @accent;
+    text-color:       #16101f;
+}
+
+element-icon {
+    size:             4em;
+    horizontal-align: 0.5;
+    background-color: transparent;
+}
+
+element-text {
+    horizontal-align: 0.5;
+    background-color: transparent;
+    text-color:       inherit;
+}

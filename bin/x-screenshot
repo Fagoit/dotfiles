@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# Screenshot helper for the WindowMaker (dotfiles) session.
+#
+# Why this exists: during a region ("area") selection, slop puts a full-screen
+# grab over the desktop. With an animated video wallpaper running, picom keeps
+# trying to composite that full-screen video underneath the selection, which
+# overwhelms the compositor and makes the WHOLE screen appear frozen until the
+# drag ends. We briefly suspend just the wallpaper player(s) during the drag so
+# the compositor stays responsive, then resume them.
+#
+# Usage: x-screenshot {area-clip|area-file|full-clip|full-file|window-clip|window-file|ocr}
+
+mode="${1:-area-clip}"
+pics="$HOME/Pictures"
+ts() { date +%Y-%m-%d_%H-%M-%S; }
+
+# Only the wallpaper mpv players carry this marker (set in bin/x-wallpaper);
+# this deliberately does NOT touch any other mpv you might be watching.
+wp_pids=$(pgrep -f 'x-wallpaper-mpv' 2>/dev/null)
+suspend_wp() { [ -n "$wp_pids" ] && kill -STOP $wp_pids 2>/dev/null; return 0; }
+resume_wp()  { [ -n "$wp_pids" ] && kill -CONT  $wp_pids 2>/dev/null; return 0; }
+trap resume_wp EXIT
+
+# Put a PNG (read from stdin) on the clipboard.
+#
+# Two problems this works around, both in Electron apps (Discord/Vesktop):
+#   1. Decode crash: maim's raw PNG can fail to decode in older Electron and
+#      abort the app on paste. Re-encoding to a plain 8-bit PNG fixes it.
+#   2. Big-image hang: a full-screen capture is a multi-MB PNG, and pasting
+#      that many bytes stalls the app. Small captures (a few KB) paste fine.
+#      So large images are shrunk in BYTES (cap resolution + quantize) while
+#      small ones are left pixel-perfect.
+copy_png() {
+  local conv
+  conv=$(command -v magick || command -v convert)
+  if [ -z "$conv" ]; then
+    xclip -selection clipboard -t image/png
+    return
+  fi
+
+  local tmp
+  tmp=$(mktemp --suffix=.png) || { xclip -selection clipboard -t image/png; return; }
+
+  # Normalize to a plain 8-bit PNG (fixes the decode crash).
+  "$conv" png:- -strip PNG32:- > "$tmp" 2>/dev/null
+
+  # Only shrink when the capture is big enough to stall a paste (~1 MB+).
+  # Screenshots tolerate this well: cap the longest edge and quantize to 256
+  # colors, which turns a multi-MB capture into a few hundred KB.
+  local bytes
+  bytes=$(stat -c%s "$tmp" 2>/dev/null || echo 0)
+  if [ "$bytes" -gt 1048576 ]; then
+    if "$conv" "$tmp" -strip -resize '1920x1920>' -colors 256 \
+        -define png:compression-level=9 "PNG8:$tmp.small" 2>/dev/null; then
+      mv -f "$tmp.small" "$tmp"
+    fi
+  fi
+
+  xclip -selection clipboard -t image/png < "$tmp"
+  rm -f "$tmp"
+}
+
+# Thin purple bordered selection (no full-screen tint the compositor must redraw).
+pick() {
+  suspend_wp
+  local g
+  g=$(slop -b 2 -c 0.78,0.55,1.0,0.85 -f "%g" 2>/dev/null)
+  resume_wp
+  printf '%s' "$g"
+}
+
+case "$mode" in
+area-clip)
+  g=$(pick); [ -z "$g" ] && exit 0
+  maim -g "$g" | copy_png && notify-send "Copied Area"
+  ;;
+area-file)
+  g=$(pick); [ -z "$g" ] && exit 0
+  mkdir -p "$pics"
+  maim -g "$g" "$pics/$(ts).png" && notify-send "Saved Screenshot"
+  ;;
+full-clip)
+  maim | copy_png && notify-send "Copied Fullscreen"
+  ;;
+full-file)
+  mkdir -p "$pics"
+  maim "$pics/$(ts).png" && notify-send "Saved Fullscreen"
+  ;;
+window-clip)
+  maim -i "$(xdotool getactivewindow)" | copy_png && notify-send "Copied Window"
+  ;;
+window-file)
+  mkdir -p "$pics"
+  maim -i "$(xdotool getactivewindow)" "$pics/$(ts).png" && notify-send "Saved Window"
+  ;;
+ocr)
+  g=$(pick); [ -z "$g" ] && exit 0
+  maim -g "$g" | tesseract stdin stdout -l eng | xclip -selection clipboard && notify-send "OCR copied to clipboard"
+  ;;
+*)
+  echo "usage: x-screenshot {area-clip|area-file|full-clip|full-file|window-clip|window-file|ocr}" >&2
+  exit 2
+  ;;
+esac

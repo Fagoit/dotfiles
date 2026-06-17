@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# pywal output hook (passed to `wal -o`). Wires the freshly generated palette
+# into this setup's apps: rofi, picom (shadow glow) and dunst.
+# Adapted from Roel-6/wmaker-dotfiles for WindowMaker + rofi/dunst/picom.
+
+CACHE="$HOME/.cache/wal"
+
+# picom: swap the shadow glow color, then reload the compositor.
+if [ -f "$CACHE/shadow.conf" ]; then
+  ln -sf "$CACHE/shadow.conf" "$HOME/.config/picom/shadow.conf"
+  if pgrep -x picom >/dev/null 2>&1; then
+    pkill -x picom
+    sleep 0.3
+    setsid -f picom --daemon >/dev/null 2>&1
+  fi
+fi
+
+# dunst: install the recolored config and restart the daemon.
+if [ -f "$CACHE/dunstrc" ]; then
+  mkdir -p "$HOME/.config/dunst"
+  cp -f "$CACHE/dunstrc" "$HOME/.config/dunst/dunstrc"
+  pkill dunst 2>/dev/null
+  command -v dunst >/dev/null 2>&1 && setsid -f dunst >/dev/null 2>&1
+fi
+
+exit 0

@@ -11,7 +11,7 @@ function GetEntries()
 			Text = "OCR",
 			Icon = "",
 			Actions = {
-				["OCR"] = [[maim -s | tesseract stdin stdout -l eng | xclip -selection clipboard]],
+				["OCR"] = [[bash "$HOME/.local/share/dotfiles/bin/x-screenshot" ocr]],
 			},
 		},
 		{

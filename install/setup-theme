@@ -6,17 +6,23 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 source "$SCRIPT_DIR/lib/helpers.sh"
 DOTFILES_DIR="$HOME/.local/share/dotfiles"
 
-# Set initial theme
-log_info "Setting up initial theme (everforest)..."
+# Set the (single) theme
+log_info "Setting up theme (matte-black)..."
 mkdir -p "$DOTFILES_DIR/current"
-ln -snf "$DOTFILES_DIR/themes/everforest" "$DOTFILES_DIR/current/theme"
-ln -snf "$DOTFILES_DIR/current/theme/backgrounds/1-everforest.jpg" "$DOTFILES_DIR/current/background"
+ln -snf "$DOTFILES_DIR/themes/matte-black" "$DOTFILES_DIR/current/theme"
+ln -snf "$DOTFILES_DIR/current/theme/backgrounds/0-ship-at-sea.jpg" "$DOTFILES_DIR/current/background"
 
 mkdir -p "$HOME/.config/nvim/lua/plugins"
 mkdir -p "$HOME/.config/btop/themes"
 
 ln -snf "$DOTFILES_DIR/current/theme/neovim.lua" "$HOME/.config/nvim/lua/plugins/theme.lua"
 ln -snf "$DOTFILES_DIR/current/theme/btop.theme" "$HOME/.config/btop/themes/current.theme"
+
+# Seed dunst with the initial theme's colors so notifications match on first boot
+if [ -f "$DOTFILES_DIR/current/theme/dunstrc" ]; then
+  mkdir -p "$HOME/.config/dunst"
+  cp -f "$DOTFILES_DIR/current/theme/dunstrc" "$HOME/.config/dunst/dunstrc"
+fi
 
 rm -rf "$HOME/.config/fastfetch"
 ln -snf "$DOTFILES_DIR/config/fastfetch" "$HOME/.config/fastfetch"
@@ -43,4 +49,4 @@ if command -v gsettings &>/dev/null; then
   gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 fi
 
-log_success "Initial theme set (everforest)"
+log_success "Theme set (matte-black)"

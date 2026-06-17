@@ -12,14 +12,14 @@ Fork of [MacieJonos/dotfiles](https://github.com/MacieJonos/dotfiles) (now archi
 - [setup-by-hardware](install/setup-by-hardware) - laptop/desktop helper package detection and X11 keybinding install
 - [setup-config](install/setup-config) - copies `config/` into `~/.config` and installs WindowMaker defaults
 - [setup-system](install/setup-system) - system config, `ly`, X session entry, user services, NVIDIA setup, and git setup
-- [setup-theme](install/setup-theme) - initial theme and wallpaper symlinks
+- [setup-theme](install/setup-theme) - theme and wallpaper symlinks
 - [setup-zsh](install/setup-zsh) - zsh config, plugins, and shell helpers
 
 ## Features
 
 - WindowMaker desktop with a repo-owned `ly` X session.
 - X11 helpers for keybindings, screenshots, wallpaper, locking, notifications, and clipboard.
-- Static and dynamic themes with Matugen/Tinte hooks.
+- A single purple WindowMaker theme applied across Ghostty, btop, dunst, GTK, and Neovim.
 - Ghostty, LazyVim, btop, fastfetch, zsh, and utility scripts for development and media work.
 
 ## Installation
@@ -44,12 +44,32 @@ Core bindings live in [default/xbindkeys/xbindkeysrc](default/xbindkeys/xbindkey
 - `Super + Shift + S` captures an area to the clipboard.
 - `Print` captures an area to a file.
 
+Window management is handled by WindowMaker (see [default/windowmaker/GNUstep/Defaults/WindowMaker](default/windowmaker/GNUstep/Defaults/WindowMaker)):
+
+- `Super + W` closes the focused window.
+- `Super + Up` maximizes; `Super + N` miniaturizes; `Super + M` move/resize.
+- `Super + Tab` / `Super + Shift + Tab` cycle windows.
+- `Super + 1..4` switch workspaces; `Super + Shift + 1..4` move the window to a workspace.
+- Right-click the desktop for the application menu.
+
+## Monitors
+
+Monitors are configured at login by [bin/x-monitors](bin/x-monitors), which
+arranges all connected outputs left-to-right at their preferred resolution and
+highest refresh rate (first output set as primary). For a custom layout, create
+`~/.config/dotfiles/monitors.sh` with raw `xrandr` commands; it is used verbatim
+when present. Run `xrandr --query` to discover output names and modes.
+
 ## Theming
 
-- `theme-set <theme>` switches themes.
-- `theme-bg-next` cycles wallpapers for the current theme.
-- `theme-menu` opens a small Rofi theme picker.
-- Dynamic theme exports are handled by Matugen/Tinte and use X11 wallpaper application through `feh`.
+The WindowMaker theme itself is a fixed purple set (`default/windowmaker`), but
+app accent colors (rofi, dunst, picom shadow glow) are driven dynamically by
+[pywal](https://github.com/eylles/pywal16). `bin/x-wallpaper` samples the current
+wallpaper (a frame of the video, or the image itself), runs `wal`, and `bin/walrefresh`
+wires the generated palette into rofi (`colors.rasi`), dunst, and picom (`shadow.conf`).
+Static purple fallbacks ship in `config/rofi/colors.rasi` and `config/picom/shadow.conf`
+for a fresh install before any palette has been generated. Wallpaper (static image or
+animated video) is applied from `current/background`.
 
 ## Manual Use
 
