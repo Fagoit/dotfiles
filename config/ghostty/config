@@ -7,6 +7,9 @@ font-style = Regular
 font-size = 12
 
 # Window
+# Freshly launched terminals (e.g. the Super+q keybind) always open in $HOME,
+# regardless of the launcher's working directory. Tabs/splits still inherit cwd.
+working-directory = home
 window-padding-x = 8
 window-padding-y = 10
 background-opacity = 0.8

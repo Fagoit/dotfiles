@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Game-mode helper: freeze the animated mpv wallpaper while a fullscreen app
+# (game / video) is focused, to free GPU + VRAM. The wallpaper players are
+# matched by the marker set in bin/x-wallpaper (--force-media-title).
+#
+# Usage:
+#   x-gamemode watch    Background daemon: auto pause/resume on fullscreen.
+#                       (started from start-windowmaker)
+#   x-gamemode pause    Manually freeze the wallpaper.
+#   x-gamemode resume   Manually resume it.
+#   x-gamemode toggle   Flip the current state.
+#
+# `pause`/`resume` are also handy as Feral gamemode hooks (gamemode.ini):
+#   [custom]
+#   start=x-gamemode pause
+#   end=x-gamemode resume
+
+MARKER='x-wallpaper-mpv'
+POLL=2
+
+# kill -STOP/-CONT halts/continues mpv without killing it: zero GPU/CPU use
+# while frozen, instant resume. (Same trick bin/x-screenshot uses.)
+wp_pause()  { pkill -STOP -f "$MARKER" 2>/dev/null; return 0; }
+wp_resume() { pkill -CONT  -f "$MARKER" 2>/dev/null; return 0; }
+
+# Is the wallpaper currently frozen? (any matched mpv in stopped state 'T')
+wp_is_paused() {
+  local pid
+  pid=$(pgrep -f "$MARKER" 2>/dev/null | head -1)
+  [ -n "$pid" ] || return 1
+  case "$(ps -o state= -p "$pid" 2>/dev/null)" in
+    T*) return 0 ;;
+    *)  return 1 ;;
+  esac
+}
+
+# True when the focused window is flagged fullscreen (EWMH). Covers the common
+# case (Proton/SDL/most native games request _NET_WM_STATE_FULLSCREEN).
+fullscreen_active() {
+  command -v xprop >/dev/null 2>&1 || return 1
+  local win state
+  win=$(xprop -root _NET_ACTIVE_WINDOW 2>/dev/null | grep -o '0x[0-9a-fA-F]\+' | head -1)
+  [ -n "$win" ] && [ "$win" != "0x0" ] || return 1
+  state=$(xprop -id "$win" _NET_WM_STATE 2>/dev/null)
+  printf '%s' "$state" | grep -q '_NET_WM_STATE_FULLSCREEN'
+}
+
+case "${1:-watch}" in
+pause)  wp_pause ;;
+resume) wp_resume ;;
+toggle) if wp_is_paused; then wp_resume; else wp_pause; fi ;;
+watch)
+  wp_resume                 # never inherit a stuck-paused wallpaper
+  trap 'wp_resume' EXIT INT TERM
+  paused=0
+  while sleep "$POLL"; do
+    if fullscreen_active; then
+      [ "$paused" -eq 0 ] && { wp_pause; paused=1; }
+    else
+      [ "$paused" -eq 1 ] && { wp_resume; paused=0; }
+    fi
+  done
+  ;;
+*)
+  echo "usage: x-gamemode {watch|pause|resume|toggle}" >&2
+  exit 2
+  ;;
+esac

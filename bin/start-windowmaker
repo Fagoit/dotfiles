@@ -71,6 +71,12 @@ if command -v picom >/dev/null 2>&1; then
   picom --daemon || true
 fi
 
+# Freeze the animated wallpaper while a fullscreen game/video is focused, to
+# free GPU + VRAM (the wallpaper isn't visible behind a fullscreen app anyway).
+if command -v xprop >/dev/null 2>&1; then
+  setsid -f "$DOTFILES_DIR/bin/x-gamemode" watch >/dev/null 2>&1 || true
+fi
+
 if command -v xss-lock >/dev/null 2>&1; then
   xss-lock -- i3lock -c 000000 &
 fi
