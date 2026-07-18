@@ -1,15 +1,14 @@
 #!/bin/bash
 source "$HOME/.local/share/dotfiles/bin/lib/helpers.sh"
+source "$HOME/.local/share/dotfiles/bin/lib/wallpaper.sh"
 
 THEMES_DIR="$HOME/.local/share/dotfiles/themes"
 CURRENT_THEME_LINK="$HOME/.local/share/dotfiles/current/theme"
-CURRENT_BACKGROUND_LINK="$HOME/.local/share/dotfiles/current/background"
 
 set_wallpaper() {
   local wallpaper="$1"
-  ln -nsf "$wallpaper" "$CURRENT_BACKGROUND_LINK"
 
-  systemctl --user restart hyprpaper.service
+  wallpaper_apply "$wallpaper"
   log_success "Wallpaper set: $(basename "$wallpaper")"
 }
 

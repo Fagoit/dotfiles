@@ -1,0 +1,20 @@
+#!/bin/bash
+# Restore the selected wallpaper on login.
+#
+# hyprpaper.service auto-starts and handles static images on its own, but it
+# cannot render video. When the current wallpaper is animated we take over and
+# launch mpvpaper. We always refresh the still frame so hyprlock has something
+# to show.
+
+source "$HOME/.local/share/dotfiles/bin/lib/wallpaper.sh"
+
+[[ -e "$CURRENT_BACKGROUND_LINK" ]] || exit 0
+
+target=$(readlink -f "$CURRENT_BACKGROUND_LINK")
+[[ -n "$target" && -e "$target" ]] || exit 0
+
+wallpaper_update_still "$target"
+
+if wallpaper_is_animated "$target"; then
+  _wallpaper_start_animated "$target"
+fi

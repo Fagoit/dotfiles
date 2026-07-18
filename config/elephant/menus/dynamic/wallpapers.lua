@@ -4,8 +4,7 @@ HideFromProviderlist = true
 Cache = false
 
 function SetWallpaper(value)
-	os.execute("ln -nsf '" .. value .. "' ~/.local/share/dotfiles/current/background")
-	os.execute("systemctl --user restart hyprpaper.service")
+	os.execute(os.getenv("HOME") .. "/.local/share/dotfiles/bin/theme-set --wallpaper '" .. value .. "' >/dev/null 2>&1 &")
 end
 
 function GetEntries()
@@ -16,7 +15,7 @@ function GetEntries()
 	local handle = io.popen(
 		"find '"
 			.. wallpapers_dir
-			.. "' -maxdepth 1 -type f \\( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.gif' \\) | sort"
+			.. "' -maxdepth 1 -type f \\( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.gif' -o -iname '*.mp4' -o -iname '*.mkv' -o -iname '*.webm' -o -iname '*.mov' \\) | sort"
 	)
 
 	if handle then

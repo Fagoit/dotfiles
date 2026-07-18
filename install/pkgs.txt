@@ -105,6 +105,7 @@ yaru-icon-theme
 
 # Applications
 mpv
+mpvpaper
 
 # Elephant Suite
 elephant

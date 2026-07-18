@@ -12,6 +12,10 @@ mkdir -p "$DOTFILES_DIR/current"
 ln -snf "$DOTFILES_DIR/themes/everforest" "$DOTFILES_DIR/current/theme"
 ln -snf "$DOTFILES_DIR/current/theme/backgrounds/1-everforest.jpg" "$DOTFILES_DIR/current/background"
 
+# Keep a static still frame for the lock screen (and hyprpaper fallback).
+source "$DOTFILES_DIR/bin/lib/wallpaper.sh"
+wallpaper_update_still "$(readlink -f "$DOTFILES_DIR/current/background")"
+
 mkdir -p "$HOME/.config/nvim/lua/plugins"
 mkdir -p "$HOME/.config/btop/themes"
 mkdir -p "$HOME/.config/mako"
