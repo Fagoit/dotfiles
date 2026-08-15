@@ -5,41 +5,62 @@ HideFromProviderlist = true
 Icon = ""
 Parent = "capture"
 function GetEntries()
+	local dir = "~/Pictures/Screenshots"
+	local file = dir .. "/$(date +%Y-%m-%d_%H-%M-%S).png"
+	local ensure = "mkdir -p " .. dir
 	return {
 		{
-			Text = "Area → Clipboard",
+			Text = "Area → Clipboard + File",
 			Actions = {
-				["area_clipboard"] = "grim -g \"$(slurp)\" - | wl-copy && notify-send 'Copied Area'",
+				["area_clipboard"] = ensure
+					.. " && grim -g \"$(slurp)\" - | tee "
+					.. file
+					.. " | wl-copy && notify-send 'Screenshot' 'Saved + copied area'",
 			},
 		},
 		{
 			Text = "Area → File",
 			Actions = {
-				["area_file"] = "grim -g \"$(slurp)\" ~/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png && notify-send 'Saved Screenshot'",
+				["area_file"] = ensure
+					.. " && grim -g \"$(slurp)\" "
+					.. file
+					.. " && notify-send 'Screenshot' 'Saved area'",
 			},
 		},
 		{
-			Text = "Window → Clipboard",
+			Text = "Window → Clipboard + File",
 			Actions = {
-				["window_clipboard"] = "grim -g \"$(hyprctl -j clients | jq -r '.[] | \"\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])\"' | slurp -r)\" - | wl-copy && notify-send 'Copied Window'",
+				["window_clipboard"] = ensure
+					.. " && grim -g \"$(hyprctl -j clients | jq -r '.[] | \"\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])\"' | slurp -r)\" - | tee "
+					.. file
+					.. " | wl-copy && notify-send 'Screenshot' 'Saved + copied window'",
 			},
 		},
 		{
 			Text = "Window → File",
 			Actions = {
-				["window_file"] = "grim -g \"$(hyprctl -j clients | jq -r '.[] | \"\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])\"' | slurp -r)\" ~/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png && notify-send 'Saved Window'",
+				["window_file"] = ensure
+					.. " && grim -g \"$(hyprctl -j clients | jq -r '.[] | \"\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])\"' | slurp -r)\" "
+					.. file
+					.. " && notify-send 'Screenshot' 'Saved window'",
 			},
 		},
 		{
-			Text = "Fullscreen → Clipboard",
+			Text = "Fullscreen → Clipboard + File",
 			Actions = {
-				["fullscreen_clipboard"] = "grim - | wl-copy && notify-send 'Copied Fullscreen'",
+				["fullscreen_clipboard"] = ensure
+					.. " && grim - | tee "
+					.. file
+					.. " | wl-copy && notify-send 'Screenshot' 'Saved + copied fullscreen'",
 			},
 		},
 		{
 			Text = "Fullscreen → File",
 			Actions = {
-				["fullscreen_file"] = "grim ~/Pictures/$(date +%Y-%m-%d_%H-%M-%S).png && notify-send 'Saved Fullscreen'",
+				["fullscreen_file"] = ensure
+					.. " && grim "
+					.. file
+					.. " && notify-send 'Screenshot' 'Saved fullscreen'",
 			},
 		},
 	}

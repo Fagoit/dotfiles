@@ -24,7 +24,15 @@ reload_apps() {
 
   local gnome_icons_theme="$HOME/.local/share/dotfiles/current/theme/icons.theme"
   if [[ -f "$gnome_icons_theme" ]]; then
-    gsettings set org.gnome.desktop.interface icon-theme "$(<"$gnome_icons_theme")"
+    local icon_theme
+    icon_theme="$(<"$gnome_icons_theme")"
+    gsettings set org.gnome.desktop.interface icon-theme "$icon_theme"
+    # GTK3/4 apps that read settings.ini directly won't pick up gsettings.
+    for gtk_settings in "$HOME/.config/gtk-3.0/settings.ini" "$HOME/.config/gtk-4.0/settings.ini"; do
+      if [[ -f "$gtk_settings" ]]; then
+        sed -i "s/^gtk-icon-theme-name=.*/gtk-icon-theme-name=$icon_theme/" "$gtk_settings"
+      fi
+    done
   fi
   gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
   gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
