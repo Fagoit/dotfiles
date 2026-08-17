@@ -1,6 +1,9 @@
 # Dynamic theme colors
 config-file = ?"~/.local/share/dotfiles/current/theme/ghostty.conf"
 
+# Make bold ANSI (fetch's magenta/white) use the bright palette.
+bold-is-bright = true
+
 # Font
 font-family = "CaskaydiaMono Nerd Font"
 font-style = Regular

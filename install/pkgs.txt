@@ -14,7 +14,7 @@ bat
 bc
 btop
 eza
-fastfetch
+fetch-git
 fd
 fzf
 ghostty

@@ -17,8 +17,8 @@ setopt appendhistory
 
 source $ZSH/oh-my-zsh.sh
 
-if [[ $(tty) == *"pts"* ]]; then
-  fastfetch
+if [[ $(tty) == *"pts"* ]] && command -v fetch &>/dev/null; then
+  fetch
 fi
 
 if command -v starship &>/dev/null; then

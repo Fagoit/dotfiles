@@ -44,7 +44,6 @@ default = [
   "menus:setup",
   "menus:tools",
   "menus:backups",
-  "menus:fastfetch_themes",
   "menus:starship_themes",
   "menus:system-themes",
   "menus:waybar-themes",

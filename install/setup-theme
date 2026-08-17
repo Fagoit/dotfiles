@@ -25,7 +25,8 @@ ln -snf "$DOTFILES_DIR/current/theme/btop.theme" "$HOME/.config/btop/themes/curr
 ln -snf "$DOTFILES_DIR/current/theme/mako.ini" "$HOME/.config/mako/config"
 
 rm -rf "$HOME/.config/fastfetch"
-ln -snf "$DOTFILES_DIR/config/fastfetch" "$HOME/.config/fastfetch"
+rm -rf "$HOME/.config/fetch"
+ln -snf "$DOTFILES_DIR/config/fetch" "$HOME/.config/fetch"
 
 log_info "Setting up wallpapers symlink..."
 mkdir -p "$HOME/Pictures"

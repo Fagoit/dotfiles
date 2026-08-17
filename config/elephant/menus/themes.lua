@@ -22,13 +22,6 @@ function GetEntries()
 			},
 		},
 		{
-			Text = "Fastfetch theme",
-			Icon = "󰸌",
-			Actions = {
-				["change-fastfetch"] = "walker --theme menus -m menus:fastfetch-themes -N",
-			},
-		},
-		{
 			Text = "Starship theme",
 			Icon = "󰸌",
 			Actions = {
