@@ -1,0 +1,47 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 28,
+    "spacing": 0,
+    "include": [
+        "~/.config/waybar/modules.json"
+    ],
+
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "format": "{name}",
+        "persistent-workspaces": {
+            "*": 5
+        }
+    },
+
+    "clock": {
+        "format": "{:%H:%M}",
+        "format-alt": "{:%Y-%m-%d}",
+        "tooltip": false
+    },
+
+    "tray": {
+        "icon-size": 14,
+        "spacing": 6
+    },
+
+    "modules-left": [
+        "hyprland/workspaces",
+        "custom/updates"
+    ],
+
+    "modules-center": [
+        "custom/music"
+    ],
+
+    "modules-right": [
+        "pulseaudio",
+        "network",
+        "cpu",
+        "battery",
+        "clock",
+        "tray",
+        "custom/exit"
+    ]
+}

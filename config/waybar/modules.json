@@ -141,5 +141,29 @@
     "format": "",
     "on-click": "nautilus",
     "tooltip-format": "Open Filemanager"
+  },
+
+  "wlr/taskbar": {
+    "format": "{icon}",
+    "icon-size": 18,
+    "icon-theme": "Papirus-Dark",
+    "tooltip-format": "{title}",
+    "on-click": "activate",
+    "on-click-middle": "close",
+    "ignore-list": []
+  },
+
+  "mpris": {
+    "format": "{player_icon} {title}",
+    "format-paused": "{status_icon} {title}",
+    "player-icons": {
+      "default": ""
+    },
+    "status-icons": {
+      "paused": "",
+      "stopped": ""
+    },
+    "max-length": 48,
+    "on-click": "playerctl play-pause"
   }
 }

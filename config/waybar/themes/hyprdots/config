@@ -1,0 +1,65 @@
+{
+    "layer": "top",
+    "position": "top",
+    "spacing": 0,
+    "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
+    "include": [
+        "~/.config/waybar/modules.json"
+    ],
+
+    "hyprland/workspaces": {
+        "disable-scroll": false,
+        "format": "{icon}",
+        "format-icons": {
+            "default": "",
+            "active": "",
+            "urgent": ""
+        },
+        "persistent-workspaces": {
+            "*": 5
+        }
+    },
+
+    "clock": {
+        "format": "{:%H:%M}",
+        "format-alt": "{:%a %d %b}",
+        "tooltip": false
+    },
+
+    "group/left": {
+        "orientation": "horizontal",
+        "modules": [
+            "hyprland/workspaces",
+            "custom/updates"
+        ]
+    },
+
+    "group/center": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/music"
+        ]
+    },
+
+    "group/right": {
+        "orientation": "horizontal",
+        "modules": [
+            "pulseaudio",
+            "bluetooth",
+            "network",
+            "cpu",
+            "custom/brightness",
+            "custom/hypridle",
+            "battery",
+            "tray",
+            "clock",
+            "custom/exit"
+        ]
+    },
+
+    "modules-left": ["group/left"],
+    "modules-center": ["group/center"],
+    "modules-right": ["group/right"]
+}

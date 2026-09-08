@@ -1,0 +1,53 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 34,
+    "spacing": 4,
+    "include": [
+        "~/.config/waybar/modules.json"
+    ],
+
+    "hyprland/workspaces": {
+        "disable-scroll": false,
+        "format": "{icon}",
+        "format-icons": {
+            "default": "",
+            "active": "",
+            "urgent": ""
+        },
+        "persistent-workspaces": {
+            "*": 5
+        }
+    },
+
+    "clock": {
+        "format": "{:%H:%M}",
+        "format-alt": "{:%a %d %b}",
+        "tooltip": false
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    },
+
+    "modules-left": [
+        "hyprland/workspaces",
+        "wlr/taskbar"
+    ],
+
+    "modules-center": [
+        "mpris"
+    ],
+
+    "modules-right": [
+        "pulseaudio",
+        "network",
+        "bluetooth",
+        "cpu",
+        "battery",
+        "clock",
+        "tray",
+        "custom/exit"
+    ]
+}

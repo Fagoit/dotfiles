@@ -1,0 +1,63 @@
+@import "../../.local/share/dotfiles/current/theme/waybar.css";
+
+* {
+    font-family: CaskaydiaMono Nerd Font;
+    font-size: 13px;
+    min-height: 0;
+    border: none;
+}
+
+window#waybar {
+    background: transparent;
+    color: @foreground;
+}
+
+#workspaces,
+#clock,
+#custom-music,
+#pulseaudio,
+#network,
+#bluetooth,
+#cpu,
+#battery,
+#tray,
+#custom-updates,
+#custom-exit {
+    background: alpha(@background, 0.68);
+    border: 1px solid alpha(@foreground, 0.10);
+    border-radius: 14px;
+    padding: 4px 12px;
+    margin: 0 2px;
+    color: @foreground;
+}
+
+#workspaces button {
+    color: alpha(@foreground, 0.40);
+    padding: 0 5px;
+}
+
+#workspaces button.active {
+    color: @foreground;
+}
+
+#workspaces button.urgent {
+    color: #e88989;
+}
+
+#clock {
+    padding: 4px 18px;
+    font-weight: 600;
+}
+
+#custom-hypridle.notactive {
+    color: #e88989;
+}
+
+tooltip {
+    background-color: alpha(@background, 0.92);
+    border-radius: 12px;
+}
+
+tooltip label {
+    color: @foreground;
+}

@@ -1,0 +1,43 @@
+{
+    "layer": "top",
+    "position": "top",
+    "exclusive": true,
+    "fixed-center": true,
+    "height": 36,
+    "margin-top": 8,
+    "include": [
+        "~/.config/waybar/modules.json"
+    ],
+
+    "hyprland/workspaces": {
+        "disable-scroll": false,
+        "format": "{icon}",
+        "format-icons": {
+            "default": "",
+            "active": "",
+            "urgent": ""
+        },
+        "persistent-workspaces": {
+            "*": 5
+        }
+    },
+
+    "clock": {
+        "format": "{:%H:%M}",
+        "format-alt": "{:%a %d %b}",
+        "tooltip": false
+    },
+
+    "group/island": {
+        "orientation": "horizontal",
+        "modules": [
+            "hyprland/workspaces",
+            "custom/music",
+            "clock"
+        ]
+    },
+
+    "modules-left": [],
+    "modules-center": ["group/island"],
+    "modules-right": []
+}

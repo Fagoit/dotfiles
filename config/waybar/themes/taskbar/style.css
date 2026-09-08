@@ -1,0 +1,62 @@
+@import "../../.local/share/dotfiles/current/theme/waybar.css";
+
+* {
+    font-family: CaskaydiaMono Nerd Font;
+    font-size: 13px;
+    min-height: 0;
+    border: none;
+}
+
+window#waybar {
+    background: alpha(@background, 0.70);
+    color: @foreground;
+}
+
+#workspaces,
+#taskbar,
+#mpris,
+#pulseaudio,
+#network,
+#bluetooth,
+#cpu,
+#battery,
+#clock,
+#tray,
+#custom-exit {
+    padding: 0 8px;
+    color: @foreground;
+}
+
+#workspaces button,
+#taskbar button {
+    color: alpha(@foreground, 0.50);
+    padding: 0 6px;
+    border-radius: 6px;
+}
+
+#workspaces button.active,
+#taskbar button.active {
+    color: @foreground;
+    background: alpha(@foreground, 0.12);
+}
+
+#workspaces button.urgent {
+    color: #e88989;
+}
+
+#mpris {
+    font-weight: 500;
+}
+
+#custom-hypridle.notactive {
+    color: #e88989;
+}
+
+tooltip {
+    background-color: alpha(@background, 0.92);
+    border-radius: 8px;
+}
+
+tooltip label {
+    color: @foreground;
+}
