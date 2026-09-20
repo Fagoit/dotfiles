@@ -99,6 +99,8 @@ gnome-themes-extra
 noto-fonts
 noto-fonts-emoji
 otf-font-awesome
+terminus-font
+ttf-terminus-nerd
 ttf-cascadia-mono-nerd
 papirus-icon-theme
 yaru-icon-theme

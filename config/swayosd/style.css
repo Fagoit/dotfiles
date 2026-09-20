@@ -8,8 +8,8 @@ window {
 }
 
 label {
-    font-family: "CaskaydiaMono Nerd Font";
-    font-size: 12pt;
+    font-family: Terminus, "Terminess Nerd Font", "CaskaydiaMono Nerd Font";
+    font-size: 12px;
     color: @label;
 }
 

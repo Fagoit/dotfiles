@@ -184,5 +184,5 @@ child:selected .item-box {
 }
 
 .preview-content.archlinuxpkgs {
-  font-family: monospace;
+  font-family: Terminus, "Terminess Nerd Font", monospace;
 }

@@ -1,8 +1,8 @@
 @import "../../.local/share/dotfiles/current/theme/waybar.css";
 
 * {
-    font-family: CaskaydiaMono Nerd Font;
-    font-size: 16px;
+    font-family: Terminus, "Terminess Nerd Font", "CaskaydiaMono Nerd Font";
+    font-size: 12px;
     min-height: 0;
 }
 

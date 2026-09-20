@@ -4,8 +4,10 @@ config-file = ?"~/.local/share/dotfiles/current/theme/ghostty.conf"
 # Make bold ANSI (fetch's magenta/white) use the bright palette.
 bold-is-bright = true
 
-# Font
-font-family = "CaskaydiaMono Nerd Font"
+# Font — bitmap Terminus at a native size; nerd fallback for icons.
+font-family = Terminus
+font-family = Terminess Nerd Font
+font-family = CaskaydiaMono Nerd Font
 font-style = Regular
 font-size = 12
 

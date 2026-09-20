@@ -1,8 +1,8 @@
 @import "../../.local/share/dotfiles/current/theme/waybar.css";
 
 * {
-    font-family: CaskaydiaMono Nerd Font;
-    font-size: 13px;
+    font-family: Terminus, "Terminess Nerd Font", "CaskaydiaMono Nerd Font";
+    font-size: 12px;
     min-height: 0;
     border: none;
 }
@@ -16,6 +16,11 @@ window#waybar {
 #workspaces button {
     color: alpha(@foreground, 0.45);
     padding: 0 10px;
+    min-width: 16px;
+}
+
+#workspaces button.empty {
+    color: alpha(@foreground, 0.35);
 }
 
 #workspaces button.active {

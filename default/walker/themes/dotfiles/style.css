@@ -188,11 +188,11 @@ child:selected .item-box {
 }
 
 .preview-content.archlinuxpkgs {
-  font-family: monospace;
+  font-family: Terminus, "Terminess Nerd Font", monospace;
 =======
 >>>>>>> c7fffd743c5d00fb408e45926e91cb3021b77e4d
 }
 
 .preview-content.archlinuxpkgs {
-  font-family: monospace;
+  font-family: Terminus, "Terminess Nerd Font", monospace;
 }
