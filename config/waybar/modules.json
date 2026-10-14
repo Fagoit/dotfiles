@@ -1,5 +1,4 @@
 {
-  // Workspaces
   "hyprland/workspaces": {
     "on-scroll-up": "hyprctl dispatch workspace r-1",
     "on-scroll-down": "hyprctl dispatch workspace r+1",
@@ -26,7 +25,6 @@
     }
   },
 
-  // Updates Count
   "custom/updates": {
     "format": "  {}",
     "escape": true,
@@ -38,7 +36,6 @@
     "on-click": "ghostty --class=local.floating -e update-perform"
   },
 
-  // Hypridle
   "custom/hypridle": {
     "format": "",
     "return-type": "json",
@@ -50,7 +47,6 @@
     "on-click-right": "hyprlock"
   },
 
-  // Music
   "custom/music": {
     "format": "  {}",
     "escape": true,
@@ -61,28 +57,24 @@
     "max-length": 50
   },
 
-  // Exit
   "custom/exit": {
     "format": "",
     "tooltip-format": "Exit menu",
     "on-click": "walker --theme menus -m menus:system --width 150 --minheight 1 --maxheight 600"
   },
 
-  // Clock
   "clock": {
     "format": "{:%A %H:%M}",
     "format-alt": "{:%d %B %Y}",
     "tooltip": false
   },
 
-  // CPU
   "cpu": {
     "interval": 5,
     "format": "",
     "on-click": "ghostty -e btop"
   },
 
-  // Pulseaudio
   "pulseaudio": {
     "scroll-step": 1,
     "format": "{icon}",
@@ -95,7 +87,6 @@
     }
   },
 
-  // Bluetooth
   "bluetooth": {
     "format": "",
     "format-disabled": "󰂲",
@@ -104,7 +95,6 @@
     "on-click": "ghostty --class=local.bluetui -e bluetui"
   },
 
-  // Battery
   "battery": {
     "format": "{capacity}% {icon}",
     "format-discharging": "{icon}",
@@ -125,7 +115,6 @@
     }
   },
 
-  // Network
   "network": {
     "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
     "format": "{icon}",
@@ -140,7 +129,6 @@
     "on-click": "ghostty --class=local.impala -e impala"
   },
 
-  // Quicklinks
   "custom/brightness": {
     "format": "",
     "on-click": "walker --theme menus -m menus:brightness --width 50 --maxwidth 50"
