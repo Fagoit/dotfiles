@@ -9,8 +9,8 @@ input_path = '~/.config/matugen/templates/ghostty.conf'
 output_path = '~/.local/share/dotfiles/themes/matugen/ghostty.conf'
 
 [templates.hyprland]
-input_path = '~/.config/matugen/templates/hyprland.conf'
-output_path = '~/.local/share/dotfiles/themes/matugen/hyprland.conf'
+input_path = '~/.config/matugen/templates/hyprland.lua'
+output_path = '~/.local/share/dotfiles/themes/matugen/hyprland.lua'
 
 [templates.hyprlock]
 input_path = '~/.config/matugen/templates/hyprlock.conf'

@@ -104,7 +104,7 @@ curl -fsSL https://raw.githubusercontent.com/Fagoit/dotfiles/master/setup.sh | b
 The installer [detects your hardware](install/setup-by-hardware):
 
 - **Laptop/Desktop** - Uses brightnessctl or ddcutil respectively, applies proper Hyprland keybinding profiles
-- **Monitor Configuration** - Checks your monitor's highest resolution and refresh rate with `hyprctl monitors` and creates appropriate `monitors.conf`
+- **Monitor Configuration** - Checks your monitor's highest resolution and refresh rate with `hyprctl monitors` and creates Lua monitor rules in `monitors.lua`
 - **Nvidia GPUs** - Detects Nvidia cards and applies [Nvidia-specific setup](install/setup-nvidia) with proper Hyprland env configs
 
 </details>

@@ -170,7 +170,6 @@ generate_colors_from_wallpaper() {
     mkdir -p "$OUTPUT_DIR"
 
     process_template "$TEMPLATES_DIR/waybar.css" "$OUTPUT_DIR/waybar.css"
-    process_template "$TEMPLATES_DIR/hyprland.conf" "$OUTPUT_DIR/hyprland.conf"
     process_template "$TEMPLATES_DIR/mako.ini" "$OUTPUT_DIR/mako.ini"
     process_template "$TEMPLATES_DIR/ghostty.conf" "$OUTPUT_DIR/ghostty.conf"
     process_template "$TEMPLATES_DIR/btop.theme" "$OUTPUT_DIR/btop.theme"
@@ -199,6 +198,8 @@ generate_colors_from_wallpaper() {
     echo "Running matugen..."
     if command -v matugen &> /dev/null; then
         matugen image "$wallpaper" -m "dark"
+        mkdir -p "$CONFIG_BASE/themes/matugen"
+        process_template "$CONFIG_BASE/config/matugen/templates/hyprland.lua" "$CONFIG_BASE/themes/matugen/hyprland.lua"
         echo "✓ Matugen colors generated"
 
         echo "Generating icon theme for matugen..."

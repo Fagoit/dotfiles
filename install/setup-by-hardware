@@ -6,36 +6,38 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source "$SCRIPT_DIR/lib/helpers.sh"
 source "$SCRIPT_DIR/lib/backup.sh"
 DOTFILES_DIR="$HOME/.local/share/dotfiles"
-HYPRLAND_CONF="$HOME/.config/hypr/hyprland.conf"
+HYPRLAND_CONF="$HOME/.config/hypr/hyprland.lua"
 
 log_info "Configuring hardware-specific settings..."
 
 # Determine which environment and keybindings to use
+HARDWARE=$(detect_hardware_type)
 if has_nvidia_gpu; then
-  ENV_CONF="nvidia-env.conf"
+  HARDWARE="nvidia"
   log_detail "Detected NVIDIA GPU"
-else
-  ENV_CONF="env.conf"
+fi
+IS_LAPTOP=false
+if [ "$HARDWARE" = "laptop" ]; then
+  IS_LAPTOP=true
 fi
 
-HARDWARE=$(detect_hardware_type)
-if [ "$HARDWARE" = "laptop" ]; then
-  spinner "Installing brightnessctl..." yay --noconfirm -S brightnessctl
-  KEYBIND_CONF="laptop-keybindings.conf"
+if [ "$IS_LAPTOP" = true ]; then
   systemctl --user enable --now hypridle.service 2>/dev/null && log_detail "Enabled hypridle service" || true
   log_detail "Detected laptop hardware"
 else
   spinner "Installing ddcutil..." yay --noconfirm -S ddcutil
-  KEYBIND_CONF="desktop-keybindings.conf"
   log_detail "Detected desktop hardware"
 fi
 
-# Remove any existing env/keybinding lines first
-sed -i '/source = .*\/\(nvidia-env\.conf\|env\.conf\)$/d' "$HYPRLAND_CONF"
-sed -i '/source = .*\/\(laptop-keybindings\.conf\|desktop-keybindings\.conf\)$/d' "$HYPRLAND_CONF"
-
-# Insert correct ones for current hardware
-sed -i "/source = .*autostart\\.conf/a source = ~/.local/share/dotfiles/default/hypr/conf/${ENV_CONF}\\nsource = ~/.local/share/dotfiles/default/hypr/conf/${KEYBIND_CONF}" "$HYPRLAND_CONF"
+# Persist hardware selection for the Lua configuration.
+mkdir -p "$HOME/.config/hypr"
+if [ "$IS_LAPTOP" = true ]; then
+  printf '%s\n' "laptop" > "$HOME/.config/hypr/hardware"
+elif [ "$HARDWARE" = "nvidia" ]; then
+  printf '%s\n' "nvidia" > "$HOME/.config/hypr/hardware"
+else
+  printf '%s\n' "desktop" > "$HOME/.config/hypr/hardware"
+fi
 
 log_success "Hardware-specific configuration applied"
 
@@ -43,16 +45,15 @@ log_success "Hardware-specific configuration applied"
 if command -v hyprctl &>/dev/null && hyprctl monitors &>/dev/null; then
   log_info "Detecting monitor configuration..."
 
-  MONITORS_CONF="$HOME/.config/hypr/conf/monitors.conf"
+  MONITORS_CONF="$HOME/.config/hypr/conf/monitors.lua"
   TEMP_CONF=$(mktemp)
 
-  echo "env = GDK_SCALE,1" > "$TEMP_CONF"
-  echo "" >> "$TEMP_CONF"
+  echo "return {" > "$TEMP_CONF"
 
   # Parse hyprctl output and extract highest mode for each monitor
   hyprctl monitors | awk '
     /^Monitor / {
-      if (monitor) print "monitor=" monitor "," mode ",auto,1"
+      if (monitor) print "\t{ output = \"" monitor "\", mode = \"" mode "\", position = \"auto\", scale = 1 },"
       monitor = $2
       gsub(/[()]/, "", monitor)
       mode = ""
@@ -80,12 +81,13 @@ if command -v hyprctl &>/dev/null && hyprctl monitors &>/dev/null; then
       }
     }
     END {
-      if (monitor && mode) print "monitor=" monitor "," mode ",auto,1"
+      if (monitor && mode) print "\t{ output = \"" monitor "\", mode = \"" mode "\", position = \"auto\", scale = 1 },"
     }
   ' >> "$TEMP_CONF"
 
   # Only update if we got valid output
-  if grep -q "^monitor=" "$TEMP_CONF"; then
+  echo "}" >> "$TEMP_CONF"
+  if grep -q "output =" "$TEMP_CONF"; then
     mv "$TEMP_CONF" "$MONITORS_CONF"
     log_success "Auto-configured monitor"
   else

@@ -32,6 +32,12 @@ for target in "${TARGETS[@]}"; do
 done
 
 cp -r "$DOTFILES_DIR/config/"* "$HOME/.config/"
+# Keep Hyprland's legacy config from taking precedence over the Lua config.
+if [ -f "$HOME/.config/hypr/hyprland.conf" ]; then
+  mv "$HOME/.config/hypr/hyprland.conf" "$HOME/.config/hypr/hyprland.conf.legacy"
+fi
+# Start with desktop bindings until setup-by-hardware detects the machine.
+printf '%s\n' "desktop" > "$HOME/.config/hypr/hardware"
 log_success "Config copied!"
 
 echo "@import url(\"file://$HOME/.local/share/dotfiles/current/theme/gtk.css\");" >"$HOME/.config/gtk-3.0/gtk.css"

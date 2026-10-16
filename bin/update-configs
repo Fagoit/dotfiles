@@ -14,8 +14,8 @@ if [[ "$1" == "--dry-run" ]]; then
 fi
 
 EXCLUDES=(
-  "hypr/hyprland.conf"
-  "hypr/conf/monitors.conf"
+	"hypr/hyprland.lua"
+	"hypr/conf/monitors.lua"
   "waybar/config"
   "waybar/style.css"
   "tinte/settings.json"
