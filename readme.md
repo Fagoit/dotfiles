@@ -52,7 +52,7 @@ Quick info:
 
 ## Features
 
-- **Dynamic Theming System** - Switch between static themes or use dynamic theming with Matugen and Pywal
+- **Dynamic Theming System** - Switch between static themes or use dynamic theming with Matugen and Tinte
 - **Utility Scripts** - Interactive package management; theming; setup of Postgres & database backup and restoration, Docker, Node.js; video download (with yt-dlp), video and image transcoding (using handbrakecli and imagemagick), interactive backups with fzf
 - **Modular ZSH Config** - Zsh setup with some nice custom functions like `cp2c` (copy file content to clipboard - c2pc <file_path>) and `c2f` (clipboard content to file c2f <file_path>)
 - **Application Configs** - Configs for Ghostty, Waybar, Walker, Elephant, lazyvim and more
@@ -212,7 +212,6 @@ Most important ones:
 - SUPER + E = File manager
 - SUPER + V = Clipboard
 - SUPER + ALT + Space = Menu
-- SUPER + CTRL + W = Open Waypaper (to trigger dynamic color update - theme must be set to Matugen or Pywal)
 
 Walker bindings - `ctrl + x` to go back from submenu
 
@@ -224,8 +223,8 @@ Walker bindings - `ctrl + x` to go back from submenu
 
 The setup includes both static and dynamic theming:
 
-- Open walker and select a theme you like, you can pick between static ones or Matugen/Pywal
-- Also, you can pick 3 different waybar themes and 2 fastfetch presets
+- Open walker and select a theme you like, you can pick between static ones or Matugen/Tinte
+- Also, you can pick between different waybar themes
 
 ### Customizing Configs
 

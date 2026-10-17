@@ -107,6 +107,11 @@ change_wallpaper() {
 }
 
 main() {
+  if [[ -z "$1" ]]; then
+    log_error "Usage: theme-set <theme> | theme-set --wallpaper <path>"
+    exit 1
+  fi
+
   case "$1" in
   tinte | matugen)
     apply_dynamic_theme "$1" "$2"

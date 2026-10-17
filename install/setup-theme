@@ -7,10 +7,11 @@ source "$SCRIPT_DIR/lib/helpers.sh"
 DOTFILES_DIR="$HOME/.local/share/dotfiles"
 
 # Set initial theme
-log_info "Setting up initial theme (everforest)..."
+log_info "Setting up initial theme (main)..."
 mkdir -p "$DOTFILES_DIR/current"
-ln -snf "$DOTFILES_DIR/themes/everforest" "$DOTFILES_DIR/current/theme"
-ln -snf "$DOTFILES_DIR/current/theme/backgrounds/1-everforest.jpg" "$DOTFILES_DIR/current/background"
+ln -snf "$DOTFILES_DIR/themes/main" "$DOTFILES_DIR/current/theme"
+INITIAL_BACKGROUND=$(find -L "$DOTFILES_DIR/current/theme/backgrounds" -type f | sort | head -n 1)
+ln -snf "$INITIAL_BACKGROUND" "$DOTFILES_DIR/current/background"
 
 # Keep a static still frame for the lock screen (and hyprpaper fallback).
 source "$DOTFILES_DIR/bin/lib/wallpaper.sh"
@@ -50,4 +51,4 @@ if command -v gsettings &>/dev/null; then
   gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 fi
 
-log_success "Initial theme set (everforest)"
+log_success "Initial theme set (main)"

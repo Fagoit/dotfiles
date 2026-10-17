@@ -40,8 +40,6 @@ local bindings = {
 	{ key = main .. " + CTRL + DOWN", command = "hyprctl dispatch workspace empty" },
 	{ key = "XF86MonBrightnessUp", command = "ddcutil setvcp 10 + 5 && notify-send Brightness \"$(ddcutil getvcp 10 | awk '/Brightness/ {gsub(/,/, \"\", $9); print $9}')%\"" },
 	{ key = "XF86MonBrightnessDown", command = "ddcutil setvcp 10 - 5 && notify-send Brightness \"$(ddcutil getvcp 10 | awk '/Brightness/ {gsub(/,/, \"\", $9); print $9}')%\"" },
-	{ key = "XF86MonBrightnessUp", command = "ddcutil setvcp 10 + 5 && notify-send Brightness \"$(ddcutil getvcp 10 | awk '/Brightness/ {gsub(/,/, \"\", $9); print $9}')%\"" },
-	{ key = "XF86MonBrightnessDown", command = "ddcutil setvcp 10 - 5 && notify-send Brightness \"$(ddcutil getvcp 10 | awk '/Brightness/ {gsub(/,/, \"\", $9); print $9}')%\"" },
 	{ key = "XF86AudioRaiseVolume", command = "swayosd-client --output-volume +5" },
 	{ key = "XF86AudioLowerVolume", command = "swayosd-client --output-volume -5" },
 	{ key = "XF86AudioMute", command = "swayosd-client --output-volume mute-toggle" },
