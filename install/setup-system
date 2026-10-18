@@ -121,6 +121,68 @@ fi
 log_info "Disabling systemd-networkd-wait-online.service..."
 sudo systemctl disable systemd-networkd-wait-online.service 2>/dev/null || true
 
+# NetworkManager's own wait-online blocks boot for seconds and only exists for
+# consumers of network-online.target. Docker is the one such consumer here and
+# it is moved to socket activation below, so drop it.
+log_info "Disabling NetworkManager-wait-online.service..."
+sudo systemctl disable NetworkManager-wait-online.service 2>/dev/null || true
+
+# Docker is used in bursts from the shell, so let the socket start the daemon
+# instead of paying for it on every boot.
+if is_installed "docker"; then
+  log_info "Switching docker to socket activation..."
+  sudo systemctl disable docker.service 2>/dev/null || true
+  sudo systemctl enable docker.socket 2>/dev/null || true
+  log_detail "docker.service will start on first use"
+fi
+
+# The home volume unlocks from /etc/cryptsetup-keys.d/home.key, so no part of
+# boot depends on the TPM SRK or NvPCRs. These units fail on every boot on
+# firmware that does not expose the expected NvPCR indices.
+log_info "Masking TPM NvPCR units..."
+for unit in systemd-pcrproduct.service systemd-tpm2-setup-early.service systemd-pcrlogin@.service; do
+  sudo systemctl mask "$unit" 2>/dev/null || true
+done
+log_detail "TPM NvPCR units masked"
+
+# plocate rebuilds its database daily and burns about 12s of CPU mid-session.
+# Keep locate usable but let the rebuild yield to everything else.
+if is_installed "plocate"; then
+  log_info "Limiting plocate-updatedb priority..."
+  sudo mkdir -p /etc/systemd/system/plocate-updatedb.service.d
+  sudo tee /etc/systemd/system/plocate-updatedb.service.d/limits.conf >/dev/null <<'EOF'
+[Service]
+Nice=19
+IOSchedulingClass=idle
+CPUSchedulingPolicy=idle
+EOF
+  log_detail "plocate-updatedb set to idle priority"
+fi
+
+# zram-backed swap is compressed RAM, so swapping early is cheaper than holding
+# pages resident and thrashing the 4G device later.
+if [ -e /dev/zram0 ]; then
+  log_info "Tuning vm settings for zram..."
+  sudo tee /etc/sysctl.d/99-zram.conf >/dev/null <<'EOF'
+vm.swappiness = 150
+vm.page-cluster = 0
+EOF
+  sudo sysctl -p /etc/sysctl.d/99-zram.conf >/dev/null
+  log_detail "swappiness=150, page-cluster=0"
+fi
+
+# Cap journal growth instead of letting it reach hundreds of megabytes.
+log_info "Capping journald size..."
+sudo mkdir -p /etc/systemd/journald.conf.d
+sudo tee /etc/systemd/journald.conf.d/size.conf >/dev/null <<'EOF'
+[Journal]
+SystemMaxUse=200M
+SystemMaxFileSize=50M
+RuntimeMaxUse=50M
+EOF
+sudo journalctl --vacuum-size=200M >/dev/null 2>&1 || true
+log_detail "journald capped at 200M"
+
 # Enable ssh agent
 log_info "Enabling gcr-ssh-agent"
 systemctl --user enable --now gcr-ssh-agent.socket
@@ -153,6 +215,23 @@ for service in "${USER_SERVICES[@]}"; do
     log_detail "Failed to enable $service (may be missing)"
   fi
 done
+
+# Query the accessibility bus on demand instead of starting it every session.
+log_info "Disabling eager at-spi bus startup..."
+mkdir -p "$HOME/.config/environment.d"
+cat > "$HOME/.config/environment.d/no-at-bridge.conf" <<'EOF'
+# Spawn at-spi's accessibility bus on demand rather than at every session start.
+NO_AT_BRIDGE=1
+EOF
+
+# Tracker/localsearch re-indexes on its own and peaks around 700M; the launcher
+# searches through walker and plocate instead. gvfs-daemon/metadata are D-Bus
+# activated when a GTK file dialog needs them.
+log_info "Masking background indexers and gvfs daemons..."
+for service in localsearch-3.service gvfs-daemon.service gvfs-metadata.service; do
+  systemctl --user mask "$service" &>/dev/null || log_detail "Failed to mask $service"
+done
+log_detail "Background indexers masked"
 
 log_detail "Services will start on next login or Hyprland restart"
 
