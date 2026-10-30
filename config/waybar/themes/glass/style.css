@@ -33,6 +33,8 @@ window#waybar {
 }
 
 #custom-music,
+#custom-previous,
+#custom-next,
 #pulseaudio,
 #bluetooth,
 #network,

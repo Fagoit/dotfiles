@@ -12,13 +12,14 @@ log_info "Configuring hardware-specific settings..."
 
 # Determine which environment and keybindings to use
 HARDWARE=$(detect_hardware_type)
-if has_nvidia_gpu; then
-  HARDWARE="nvidia"
-  log_detail "Detected NVIDIA GPU"
-fi
 IS_LAPTOP=false
 if [ "$HARDWARE" = "laptop" ]; then
   IS_LAPTOP=true
+fi
+HAS_NVIDIA=false
+if has_nvidia_gpu; then
+  HAS_NVIDIA=true
+  log_detail "Detected NVIDIA GPU"
 fi
 
 if [ "$IS_LAPTOP" = true ]; then
@@ -31,9 +32,11 @@ fi
 
 # Persist hardware selection for the Lua configuration.
 mkdir -p "$HOME/.config/hypr"
-if [ "$IS_LAPTOP" = true ]; then
+if [ "$IS_LAPTOP" = true ] && [ "$HAS_NVIDIA" = true ]; then
+  printf '%s\n' "laptop-nvidia" > "$HOME/.config/hypr/hardware"
+elif [ "$IS_LAPTOP" = true ]; then
   printf '%s\n' "laptop" > "$HOME/.config/hypr/hardware"
-elif [ "$HARDWARE" = "nvidia" ]; then
+elif [ "$HAS_NVIDIA" = true ]; then
   printf '%s\n' "nvidia" > "$HOME/.config/hypr/hardware"
 else
   printf '%s\n' "desktop" > "$HOME/.config/hypr/hardware"
@@ -48,12 +51,12 @@ if command -v hyprctl &>/dev/null && hyprctl monitors &>/dev/null; then
   MONITORS_CONF="$HOME/.config/hypr/conf/monitors.lua"
   TEMP_CONF=$(mktemp)
 
-  echo "return {" > "$TEMP_CONF"
+  : > "$TEMP_CONF"
 
   # Parse hyprctl output and extract highest mode for each monitor
   hyprctl monitors | awk '
     /^Monitor / {
-      if (monitor) print "\t{ output = \"" monitor "\", mode = \"" mode "\", position = \"auto\", scale = 1 },"
+      if (monitor) print "hl.monitor({ output = \"" monitor "\", mode = \"" mode "\", position = \"auto\", scale = 1 })"
       monitor = $2
       gsub(/[()]/, "", monitor)
       mode = ""
@@ -81,13 +84,12 @@ if command -v hyprctl &>/dev/null && hyprctl monitors &>/dev/null; then
       }
     }
     END {
-      if (monitor && mode) print "\t{ output = \"" monitor "\", mode = \"" mode "\", position = \"auto\", scale = 1 },"
+      if (monitor && mode) print "hl.monitor({ output = \"" monitor "\", mode = \"" mode "\", position = \"auto\", scale = 1 })"
     }
   ' >> "$TEMP_CONF"
 
   # Only update if we got valid output
-  echo "}" >> "$TEMP_CONF"
-  if grep -q "output =" "$TEMP_CONF"; then
+  if grep -q "^hl.monitor(" "$TEMP_CONF"; then
     mv "$TEMP_CONF" "$MONITORS_CONF"
     log_success "Auto-configured monitor"
   else

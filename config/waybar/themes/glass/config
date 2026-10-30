@@ -42,15 +42,14 @@
     ],
 
     "modules-center": [
-        "custom/music"
+        "custom/previous",
+        "custom/music",
+        "custom/next"
     ],
 
     "modules-right": [
         "pulseaudio",
-        "bluetooth",
-        "network",
         "cpu",
-        "custom/brightness",
         "custom/hypridle",
         "battery",
         "clock",

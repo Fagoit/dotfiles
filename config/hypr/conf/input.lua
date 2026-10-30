@@ -1,3 +1,16 @@
--- Input is configured directly in hyprland.lua; this file is intentionally a
--- placeholder for users who want to add extra settings in their own module.
-return {}
+hl.config({
+	input = {
+		kb_layout = "pl",
+		kb_variant = "",
+		kb_model = "",
+		kb_options = "",
+		kb_rules = "",
+
+		follow_mouse = 1,
+
+		sensitivity = 0,
+		touchpad = {
+			natural_scroll = false,
+		},
+	},
+})

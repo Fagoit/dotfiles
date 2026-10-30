@@ -4,43 +4,26 @@ HideFromProviderlist = true
 Cache = false
 Parent = "menu"
 
-function GetEntries()
-	local entries = {}
-	local home = os.getenv("HOME") or ""
-	local hypr_config = home .. "/.config/hypr/hyprland.lua"
-
-	local hardware_file = home .. "/.config/hypr/hardware"
-	local hardware_handle = io.open(hardware_file, "r")
-	local hardware = hardware_handle and hardware_handle:read("*l") or "desktop"
-	if hardware_handle then
-		hardware_handle:close()
-	end
-	local keybindings_path = home .. "/.local/share/dotfiles/default/hypr/lua/" .. (hardware == "laptop" and "laptop-keybindings.lua" or "desktop-keybindings.lua")
-	local config_file = keybindings_path
-
-	local test_file = io.open(config_file, "r")
-	if not test_file then
+local function add_bindings(entries, path)
+	local file = io.open(path, "r")
+	if not file then
 		table.insert(entries, {
 			Text = "Error: Keybindings file not found",
-			Subtext = config_file,
+			Subtext = path,
 			Value = "",
 		})
-		return entries
-	end
-	test_file:close()
-
-	local file = io.open(config_file, "r")
-	if not file then
-		return entries
+		return
 	end
 
 	for line in file:lines() do
-		local combo, command = line:match('%{%s*key%s*=%s*"([^"]+)"%s*,%s*command%s*=%s*"([^"]+)"')
-		if combo and command then
-			local display_text = combo .. string.rep(" ", math.max(1, 35 - #combo)) .. "→ " .. command
+		-- Binds built in loops (workspaces) use concatenation and are listed separately.
+		local combo = line:match('^%s*hl%.bind%(%s*"([^"]+)"%s*,')
+		local description = line:match('description%s*=%s*"([^"]+)"')
+		if combo and description then
+			local display_text = combo .. string.rep(" ", math.max(1, 35 - #combo)) .. "→ " .. description
 			table.insert(entries, {
 				Text = display_text,
-				Value = combo .. " → " .. command,
+				Value = combo .. " → " .. description,
 				Actions = {
 					copy = "echo '" .. combo .. "' | wl-copy && notify-send 'Copied' '" .. combo .. "'",
 				},
@@ -49,6 +32,30 @@ function GetEntries()
 	end
 
 	file:close()
+end
+
+function GetEntries()
+	local entries = {}
+	local home = os.getenv("HOME") or ""
+	local keybindings_dir = home .. "/.local/share/dotfiles/default/hypr/lua/"
+
+	local hardware_handle = io.open(home .. "/.config/hypr/hardware", "r")
+	local hardware = hardware_handle and hardware_handle:read("*l") or "desktop"
+	if hardware_handle then
+		hardware_handle:close()
+	end
+	local is_laptop = hardware == "laptop" or hardware == "laptop-nvidia"
+
+	add_bindings(entries, keybindings_dir .. "keybindings.lua")
+	add_bindings(entries, keybindings_dir .. (is_laptop and "laptop-keybindings.lua" or "desktop-keybindings.lua"))
+	table.insert(entries, {
+		Text = "SUPER + [0-9]" .. string.rep(" ", 22) .. "→ Open workspace 1-10",
+		Value = "SUPER + [0-9] → Open workspace 1-10",
+	})
+	table.insert(entries, {
+		Text = "SUPER + SHIFT + [0-9]" .. string.rep(" ", 14) .. "→ Move active window to workspace 1-10",
+		Value = "SUPER + SHIFT + [0-9] → Move active window to workspace 1-10",
+	})
 
 	if #entries == 0 then
 		table.insert(entries, {

@@ -1,3 +1,7 @@
-return {
-	active_border_color = "rgb({{colors.primary.default.hex_stripped}})",
-}
+hl.config({
+	general = {
+		col = {
+			active_border = "rgba({{colors.primary.default.hex_stripped}}cc)",
+		},
+	},
+})
