@@ -7,7 +7,7 @@ usbutils
 
 # Privacy
 mullvad-vpn
-librewolf-bin
+librewolf
 
 # Terminal & Shell
 bat
@@ -61,7 +61,7 @@ tesseract-data-eng
 tinte
 uwsm
 walker
-waybar
+waybar-git
 zenity
 
 # Screen Recording & Video
