@@ -1,19 +1,20 @@
-# distro: gentoo
-         -/oyddmdhs+:.
-     -odNMMMMMMMMNNmhy+-`
-   -yNMMMMMMMMMMMNNNmmdhy+-
- `omMMMMMMMMMMMMNmdmmmmddhhy/`
- omMMMMMMMMMMMNhhyyyohmdddhhhdo`
-.ydMMMMMMMMMMdhs++so/smdddhhhhdm+`
- oyhdmNMMMMMMMNdyooydMddddhhhhyhNd.
-  :oyhhdNNMMMMMMMNNMMMdddhhhhhyymMh
-    .:+sydNMMMMMNNMMMMdddhhhhhhmMmy
-       /mMMMMMMNNNMMMdddhhhhhmMNhs:
-    `oNMMMMMMMNNNMMMddddhhdmMNhs+`
-  `sNMMMMMMMMNNNMMMdddddmNMmhs/.
- /NMMMMMMMMNNNNMMMdddmNMNdso:`
-+MMMMMMMNNNNNMMMMdMNMNdso/-
-yMMNNNNNNNMMMMMNNMmhs+/-`
-/hMMNNNNNNNNMNdhs++/-`
-`/ohdmmddhys+++/:.`
-  `-//////:--.
+# distro: arch
+                   -`
+                  .o+`
+                 `ooo/
+                `+oooo:
+               `+oooooo:
+               -+oooooo+:
+             `/:-:++oooo+:
+            `/++++/+++++++:
+           `/++++++++++++++:
+          `/+++ooooooooooooo/`
+         ./ooosssso++osssssso+`
+        .oossssso-````/ossssss+`
+       -osssssso.      :ssssssso.
+      :osssssss/        osssso+++-
+     /ossssssss/        +ssssooo/-
+   `/ossssso+/:-        -:/+osssso+-
+  `+sso+:-`                 `.-/+oso:
+ `++:.                           `-/+/
+ .`                                 `/

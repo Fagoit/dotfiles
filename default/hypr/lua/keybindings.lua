@@ -73,18 +73,41 @@ hl.bind("SUPER + ALT + SPACE", hl.dsp.exec_cmd("walker --theme menus -m menus:me
 hl.bind("SUPER + CTRL + B", hl.dsp.exec_cmd("walker -t menus -m menus:bookmarks --maxwidth 300 --minwidth 180"), { description = "Bookmarks menu" })
 
 -- Workspaces: SUPER + [0-9] opens workspace 1-10, SUPER + SHIFT + [0-9] moves the active window there
+local max_workspaces = 10
+
+local function cycle_workspace(direction)
+	local workspace = hl.get_active_workspace()
+	if workspace then
+		local next_id = (workspace.id - 1 + direction) % max_workspaces + 1
+		hl.dispatch(hl.dsp.focus({ workspace = next_id }))
+	end
+end
+
+local function focus_empty_workspace()
+	local existing = {}
+	for _, workspace in ipairs(hl.get_workspaces()) do
+		existing[workspace.id] = true
+	end
+	for id = 1, max_workspaces do
+		if not existing[id] then
+			hl.dispatch(hl.dsp.focus({ workspace = id }))
+			return
+		end
+	end
+end
+
 for i = 1, 10 do
 	local key = i % 10
 	hl.bind("SUPER + " .. key, hl.dsp.focus({ workspace = i }), { description = "Open workspace " .. i })
 	hl.bind("SUPER + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }), { description = "Move active window to workspace " .. i })
 end
 
-hl.bind("SUPER + Tab", hl.dsp.focus({ workspace = "m+1" }), { description = "Open next workspace" })
-hl.bind("SUPER + SHIFT + Tab", hl.dsp.focus({ workspace = "m-1" }), { description = "Open previous workspace" })
+hl.bind("SUPER + Tab", function() cycle_workspace(1) end, { description = "Open next workspace" })
+hl.bind("SUPER + SHIFT + Tab", function() cycle_workspace(-1) end, { description = "Open previous workspace" })
 
-hl.bind("SUPER + mouse_down", hl.dsp.focus({ workspace = "e+1" }), { description = "Open next workspace" })
-hl.bind("SUPER + mouse_up", hl.dsp.focus({ workspace = "e-1" }), { description = "Open previous workspace" })
-hl.bind("SUPER + CTRL + down", hl.dsp.focus({ workspace = "empty" }), { description = "Open the next empty workspace" })
+hl.bind("SUPER + mouse_down", function() cycle_workspace(1) end, { description = "Open next workspace" })
+hl.bind("SUPER + mouse_up", function() cycle_workspace(-1) end, { description = "Open previous workspace" })
+hl.bind("SUPER + CTRL + down", focus_empty_workspace, { description = "Open the next empty workspace (1-10)" })
 
 -- Volume
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("swayosd-client --output-volume +5"), { repeating = true, description = "Volume up" })

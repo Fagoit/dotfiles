@@ -11,15 +11,16 @@ hl.config({
 		rounding = 0,
 		rounding_power = 1,
 
-		active_opacity = 0.95,
-		inactive_opacity = 0.9,
+		active_opacity = 0.86,
+		inactive_opacity = 0.78,
 
 		blur = {
 			enabled = true,
-			size = 4,
-			passes = 3,
+			size = 8,
+			passes = 1,
 			new_optimizations = true,
 			ignore_opacity = true,
+			xray = true,
 		},
 
 		shadow = {
@@ -28,7 +29,7 @@ hl.config({
 	},
 
 	animations = {
-		enabled = true,
+		enabled = false,
 	},
 
 	dwindle = {

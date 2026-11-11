@@ -12,6 +12,7 @@
 DOTFILES_DIR="$HOME/.local/share/dotfiles"
 CURRENT_BACKGROUND_LINK="$DOTFILES_DIR/current/background"
 CURRENT_BACKGROUND_STILL="$DOTFILES_DIR/current/background-still"
+WALLPAPER_LOCK="${XDG_RUNTIME_DIR:-/tmp}/dotfiles-wallpaper.lock"
 
 # Extensions treated as animated wallpapers (played with mpvpaper).
 WALLPAPER_ANIMATED_EXTENSIONS=(mp4 mkv webm mov m4v avi gif)
@@ -49,7 +50,21 @@ _wallpaper_start_animated() {
 }
 
 _wallpaper_start_static() {
+  local wallpaper="$1"
+
   _wallpaper_stop_animated
+
+  # Switch an already-running hyprpaper without restarting it. Restarting on
+  # every click races when the background picker is clicked quickly and can
+  # trip systemd's start-limit, leaving hyprpaper failed.
+  if systemctl --user is-active --quiet hyprpaper.service; then
+    if hyprctl hyprpaper wallpaper ",$wallpaper" >/dev/null 2>&1; then
+      return 0
+    fi
+  fi
+
+  # Recover from a previous start-limit-hit state when a restart is needed.
+  systemctl --user reset-failed hyprpaper.service 2>/dev/null || true
   systemctl --user restart hyprpaper.service
 }
 
@@ -72,6 +87,10 @@ wallpaper_update_still() {
 # Apply a wallpaper: update symlinks and start the matching backend.
 wallpaper_apply() {
   local wallpaper="$1"
+  local lock_fd
+
+  exec {lock_fd}>"$WALLPAPER_LOCK"
+  flock -x "$lock_fd"
 
   ln -nsf "$wallpaper" "$CURRENT_BACKGROUND_LINK"
   wallpaper_update_still "$wallpaper"
@@ -79,8 +98,11 @@ wallpaper_apply() {
   if wallpaper_is_animated "$wallpaper"; then
     _wallpaper_start_animated "$wallpaper"
   else
-    _wallpaper_start_static
+    _wallpaper_start_static "$wallpaper"
   fi
+
+  flock -u "$lock_fd"
+  exec {lock_fd}>&-
 }
 
 # Stop any running wallpaper backend and clear hyprpaper's output.
