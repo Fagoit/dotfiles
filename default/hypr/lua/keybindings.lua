@@ -119,6 +119,9 @@ hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("swayosd-client --playerctl play-pause"
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("swayosd-client --playerctl play-pause"), { description = "Play/pause media" })
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("swayosd-client --playerctl next"), { description = "Next track" })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("swayosd-client --playerctl previous"), { description = "Previous track" })
+hl.bind("SUPER + period", hl.dsp.exec_cmd("swayosd-client --playerctl next"), { description = "Next track" })
+hl.bind("SUPER + comma", hl.dsp.exec_cmd("swayosd-client --playerctl previous"), { description = "Previous track" })
+hl.bind("SUPER + slash", hl.dsp.exec_cmd("swayosd-client --playerctl play-pause"), { description = "Play/pause media" })
 
 -- Lock
 hl.bind("SUPER + SHIFT + L", hl.dsp.exec_cmd("hyprlock"), { description = "Lock screen" })

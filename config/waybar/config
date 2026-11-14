@@ -1,56 +1,39 @@
 {
     "layer": "top",
     "position": "top",
+    "height": 32,
+    "spacing": 4,
     "include": [
         "~/.config/waybar/modules.json"
     ],
 
     "hyprland/workspaces": {
-         "disable-scroll": true,
-         "sort-by-name": true,
-         "format": " {icon} ",
-         "format-icons": {
-            "default": "",
-            "1": "1",
-            "2": "2",
-            "3": "3",
-            "4": "4",
-            "5": "5",
-            "6": "6",
-            "7": "7",
-            "8": "8",
-            "9": "9",
-            "active": "",
-         },
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{name}",
         "persistent-workspaces": {
             "1": [],
             "2": [],
             "3": [],
             "4": [],
-            "5": []
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": [],
+            "9": [],
+            "10": []
         }
-     },
-
-    "tray": {
-        "icon-size": 21,
-        "spacing": 10
     },
 
     "clock": {
-        "format-alt": "{:%d/%m/%Y}",
-        "format": " {:%H:%M}"
+        "format": "{:%a %H:%M}",
+        "format-alt": "{:%d %B %Y}",
+        "tooltip": false
     },
 
-    "pulseaudio": {
-        "scroll-step": 1,
-        "format": "{icon} {volume}%",
-        "on-click": "ghostty --class=local.wiremix -e wiremix",
-        "on-click-right": "pamixer -t",
-        "tooltip-format": "Playing at {volume}%",
-        "format-muted": "",
-        "format-icons": {
-        "default": ["", "", " "]
-        }
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
     },
 
     "modules-left": [
@@ -59,19 +42,18 @@
     ],
 
     "modules-center": [
-        "custom/music"
+        "custom/previous",
+        "custom/music",
+        "custom/next"
     ],
 
     "modules-right": [
         "pulseaudio",
-        "clock",
-        "tray",
-        "bluetooth",
-        "network",
         "cpu",
-        "custom/brightness",
         "custom/hypridle",
         "battery",
+        "clock",
+        "tray",
         "custom/exit"
     ]
 }

@@ -25,7 +25,10 @@ fi
 echo
 
 if command -v pacman &>/dev/null; then
-  yay -Syu --noconfirm
+  if ! yay -Syu --noconfirm; then
+    log_error "Package update failed; stopping"
+    exit 1
+  fi
 else
   log_error "Platform not supported"
   exit 1

@@ -1,0 +1,55 @@
+# Uses MPRIS, so no Spotify API login is needed. Works with spotify, spotifyd,
+# ncspot, mpv, browsers, etc. Restrict with e.g. players: [spotify]
+# (names from `playerctl -l`).
+player: mpris
+ignoreErrors: true
+timerInterval: 200
+updateInterval: 2000
+
+# Colors are ANSI palette indices so they follow the active dotfiles theme.
+style:
+  hAlignment: center
+  before:
+    background: ""
+    foreground: "8"
+    bold: false
+    italic: true
+    underline: false
+    strikethrough: false
+    blink: false
+    faint: false
+  current:
+    background: ""
+    foreground: "4"
+    bold: true
+    italic: false
+    underline: false
+    strikethrough: false
+    blink: false
+    faint: false
+  after:
+    background: ""
+    foreground: "7"
+    bold: false
+    italic: false
+    underline: false
+    strikethrough: false
+    blink: false
+    faint: true
+
+# Used by `sptlrx pipe` (bin/lyrics). 0 = no length limit.
+pipe:
+  length: 0
+  overflow: word
+
+mpd:
+  address: 127.0.0.1:6600
+  password: ""
+mopidy:
+  address: 127.0.0.1:6680
+mpris:
+  players: []
+browser:
+  port: 8974
+local:
+  folder: ""

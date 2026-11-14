@@ -55,7 +55,10 @@ else
   if [[ "$current_tag" != "$latest_tag" ]]; then
     log_success "Update available ($current_tag -> $latest_tag)"
 
-    git --no-pager -C "$DOTFILES_DIR" fetch --tags -q
+    if ! git --no-pager -C "$DOTFILES_DIR" fetch --tags -q; then
+      log_error "Could not fetch tags"
+      exit 1
+    fi
 
     echo ""
     git --no-pager -C "$DOTFILES_DIR" log --oneline --color=always "$current_tag..$latest_tag" | sed 's/^/  /'
@@ -63,7 +66,10 @@ else
     git --no-pager -C "$DOTFILES_DIR" diff --stat --color=always "$current_tag..$latest_tag" | sed 's/^/  /'
     echo ""
 
-    git --no-pager -C "$DOTFILES_DIR" pull --autostash -q
+    if ! git --no-pager -C "$DOTFILES_DIR" pull --autostash -q; then
+      log_error "Could not pull updates"
+      exit 1
+    fi
     git --no-pager -C "$DOTFILES_DIR" diff --check || git --no-pager -C "$DOTFILES_DIR" reset --merge
     log_success "Updated to $latest_tag"
 

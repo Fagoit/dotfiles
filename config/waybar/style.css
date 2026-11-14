@@ -2,109 +2,62 @@
 
 * {
     font-family: CaskaydiaMono Nerd Font;
-    font-size: 16px;
+    font-size: 13px;
     min-height: 0;
+    border: none;
 }
 
-#waybar {
-    background: transparent;
-    color: @background;
-    margin: 5px 5px;
-}
-
-#workspaces {
-    border-radius: 1rem;
-    margin: 5px;
-    background: linear-gradient(to bottom, alpha(@foreground, 0.16), alpha(@background, 0.58) 55%, alpha(@background, 0.68));
-    box-shadow: inset 0 1px 0 0 alpha(@foreground, 0.20);
-    margin-left: 1rem;
+window#waybar {
+    background: alpha(@background, 0.38);
+    color: @foreground;
+    border-bottom: 1px solid alpha(@foreground, 0.10);
 }
 
 #workspaces button {
-    color: @foreground;
-    border-radius: 1rem;
-    padding: 0.4rem;
+    color: alpha(@foreground, 0.45);
+    padding: 0 10px;
+    min-width: 16px;
+}
+
+#workspaces button.empty {
+    color: alpha(@foreground, 0.35);
 }
 
 #workspaces button.active {
     color: @foreground;
-    border-radius: 1rem;
+    background: alpha(@foreground, 0.12);
+}
+
+#workspaces button.urgent {
+    color: #e88989;
 }
 
 #custom-music,
-#tray,
-#bluetooth,
-#cpu,
-#clock,
-#network,
-#battery,
+#custom-previous,
+#custom-next,
 #pulseaudio,
+#bluetooth,
+#network,
+#cpu,
 #custom-brightness,
 #custom-hypridle,
+#battery,
+#clock,
+#tray,
 #custom-updates,
 #custom-exit {
-    background: linear-gradient(to bottom, alpha(@foreground, 0.16), alpha(@background, 0.58) 55%, alpha(@background, 0.68));
-    box-shadow: inset 0 1px 0 0 alpha(@foreground, 0.20);
-    padding: 0.5rem 1rem;
-    margin: 5px 0;
-}
-
-#clock {
     color: @foreground;
-    border-radius: 0px 1rem 1rem 0px;
-    margin-right: 1rem;
-}
-
-#pulseaudio {
-    color: @foreground;
-    border-radius: 1rem 0px 0px 1rem;
-    margin-left: 1rem;
-}
-
-#custom-music {
-    color: @foreground;
-    border-radius: 1rem;
-}
-
-#bluetooth {
-    border-radius: 1rem 0rem 0rem 1rem;
-    margin-left: 1rem;
-    color: @foreground;
-}
-
-#cpu,
-#network,
-#battery,
-#custom-hypridle,
-#custom-brightness {
-    color: @foreground;
-}
-
-#custom-exit {
-    border-radius: 0rem 1rem 1rem 0rem;
-    margin-right: 1rem;
-    color: @foreground;
-}
-
-#tray {
-    border-radius: 1rem;
-}
-
-
-#custom-updates {
-    border-radius: 1rem;
-    color: @foreground;
+    padding: 0 10px;
+    background: transparent;
 }
 
 #custom-hypridle.notactive {
-    color: rgb(224, 137, 137);
+    color: #e88989;
 }
 
 tooltip {
-    background-color: alpha(@background, 0.9);
-    padding: 20px;
-    margin: 0px;
-    border-radius: 1rem;
+    background-color: alpha(@background, 0.88);
+    border-radius: 8px;
 }
 
 tooltip label {

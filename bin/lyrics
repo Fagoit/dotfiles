@@ -1,0 +1,226 @@
+#!/usr/bin/env python3
+"""Show the previous, current and next lyric line of the playing song, large.
+
+Lyrics come from lrclib.net, timing from playerctl (MPRIS). Lines are drawn as
+an image (ImageMagick + kitty graphics protocol) so they can be any size.
+
+Usage:
+  lyrics          open in a new Ghostty window
+  lyrics --here   draw in the current terminal (q to quit)
+
+Env: LYRICS_PLAYER (playerctl player name), LYRICS_FONT (font family).
+"""
+
+import base64
+import bisect
+import fcntl
+import json
+import os
+import re
+import select
+import struct
+import subprocess
+import sys
+import termios
+import tty
+import urllib.parse
+import urllib.request
+
+THEME = os.path.expanduser("~/.local/share/dotfiles/current/theme/ghostty.conf")
+FONT = os.environ.get("LYRICS_FONT", "CaskaydiaMono Nerd Font")
+PLAYER = os.environ.get("LYRICS_PLAYER")
+POLL = 0.15
+NOTE = "♪"
+
+
+def theme_colors():
+    colors = {"fg": "#BEBEBE", "dim": "#8A8A8D", "accent": "#E68E0D"}
+    try:
+        with open(THEME) as f:
+            for line in f:
+                m = re.match(r"\s*palette\s*=\s*(\d+)\s*=\s*(#\w+)", line)
+                if m and m.group(1) == "4":
+                    colors["accent"] = m.group(2)
+                elif m and m.group(1) == "8":
+                    colors["dim"] = m.group(2)
+                m = re.match(r"\s*foreground\s*=\s*(#\w+)", line)
+                if m:
+                    colors["fg"] = m.group(1)
+    except OSError:
+        pass
+    return colors
+
+
+def font_file(style):
+    out = subprocess.run(
+        ["fc-match", "-f", "%{file}", f"{FONT}:style={style}"],
+        capture_output=True, text=True,
+    )
+    return out.stdout.strip() or FONT
+
+
+def player_state():
+    cmd = ["playerctl"]
+    if PLAYER:
+        cmd += ["-p", PLAYER]
+    cmd += ["metadata", "--format",
+            "{{status}}\t{{artist}}\t{{title}}\t{{album}}\t{{mpris:length}}\t{{position}}"]
+    out = subprocess.run(cmd, capture_output=True, text=True)
+    parts = out.stdout.rstrip("\n").split("\t")
+    if out.returncode != 0 or len(parts) != 6 or not parts[2]:
+        return None
+    _, artist, title, album, length, position = parts
+    to_s = lambda v: int(v) / 1e6 if v.isdigit() else 0.0
+    return {"artist": artist, "title": title, "album": album,
+            "length": to_s(length), "position": to_s(position)}
+
+
+def lrclib(path, params):
+    url = f"https://lrclib.net/api/{path}?" + urllib.parse.urlencode(params)
+    req = urllib.request.Request(url, headers={"User-Agent": "dotfiles-lyrics"})
+    try:
+        with urllib.request.urlopen(req, timeout=10) as r:
+            return json.load(r)
+    except Exception:
+        return None
+
+
+def parse_lrc(text):
+    lines = []
+    for raw in text.splitlines():
+        stamps = re.findall(r"\[(\d+):(\d+(?:\.\d+)?)\]", raw)
+        words = re.sub(r"\[[^\]]*\]", "", raw).strip()
+        for mm, ss in stamps:
+            lines.append((int(mm) * 60 + float(ss), words))
+    return sorted(lines)
+
+
+def fetch_lyrics(song):
+    hit = lrclib("get", {
+        "artist_name": song["artist"], "track_name": song["title"],
+        "album_name": song["album"], "duration": round(song["length"]),
+    })
+    if not (hit and hit.get("syncedLyrics")):
+        results = lrclib("search", {"artist_name": song["artist"],
+                                    "track_name": song["title"]}) or []
+        hit = next((r for r in results if r.get("syncedLyrics")), None)
+    return parse_lrc(hit["syncedLyrics"]) if hit else []
+
+
+def window_size():
+    rows, cols, xpix, ypix = struct.unpack(
+        "HHHH", fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, b"\0" * 8))
+    if not xpix or not ypix:
+        xpix, ypix = cols * 10, rows * 22
+    return rows, cols, xpix, ypix
+
+
+def im_text(text):
+    text = text.replace("\\", "\\\\").replace("%", "%%")
+    return "\\" + text if text.startswith("@") else text
+
+
+def render(view, width, height, colors, fonts):
+    prev, cur, nxt = view
+    big = max(12, int(min(height * 0.16, width * 0.07)))
+    small = max(10, int(big * 0.55))
+    wrap = int(width * 0.92)
+
+    def caption(text, font, size, color):
+        if not text.strip():
+            return ["(", "-size", f"{wrap}x{size}", "xc:none", ")"]
+        return ["(", "-font", font, "-pointsize", str(size), "-fill", color,
+                "-size", f"{wrap}x", "caption:" + im_text(text), ")"]
+
+    cmd = ["magick", "-background", "none", "-gravity", "center",
+           *caption(prev, fonts["italic"], small, colors["dim"]),
+           *caption(cur, fonts["bold"], big, colors["accent"]),
+           *caption(nxt, fonts["regular"], small, colors["fg"]),
+           "-smush", str(int(big * 0.6)),
+           "-resize", f"{width}x{height}>",
+           "-extent", f"{width}x{height}", "png:-"]
+    return subprocess.run(cmd, capture_output=True).stdout
+
+
+def draw(png, rows, cols):
+    if not png:
+        return
+    data = base64.standard_b64encode(png).decode()
+    chunks = [data[i:i + 4096] for i in range(0, len(data), 4096)]
+    out = ["\x1b[?2026h\x1b_Ga=d,d=A,q=2\x1b\\\x1b[H"]
+    for i, chunk in enumerate(chunks):
+        more = int(i < len(chunks) - 1)
+        if i == 0:
+            out.append(f"\x1b_Ga=T,f=100,q=2,C=1,c={cols},r={rows},m={more};{chunk}\x1b\\")
+        else:
+            out.append(f"\x1b_Gm={more};{chunk}\x1b\\")
+    out.append("\x1b[?2026l")
+    sys.stdout.write("".join(out))
+    sys.stdout.flush()
+
+
+def current_lines(lyrics, position):
+    times = [t for t, _ in lyrics]
+    idx = bisect.bisect_right(times, position) - 1
+    get = lambda i: (lyrics[i][1] or NOTE) if 0 <= i < len(lyrics) else ""
+    if idx < 0:
+        return "", NOTE, get(0)
+    return get(idx - 1), get(idx), get(idx + 1)
+
+
+def run():
+    colors = theme_colors()
+    fonts = {s.lower(): font_file(s) for s in ("Regular", "Bold", "Italic")}
+    cache, last = {}, None
+
+    def show(view):
+        nonlocal last
+        rows, cols, xpix, ypix = window_size()
+        state = (view, rows, cols, xpix, ypix)
+        if state != last:
+            draw(render(view, xpix, ypix, colors, fonts), rows, cols)
+            last = state
+
+    while True:
+        if select.select([sys.stdin], [], [], POLL)[0] and sys.stdin.read(1) in ("q", "Q"):
+            return
+
+        song = player_state()
+        if not song:
+            show(("", "Nothing playing", ""))
+            continue
+
+        key = (song["artist"], song["title"])
+        if key not in cache:
+            show(("", NOTE, f"{song['artist']} — {song['title']}"))
+            cache[key] = fetch_lyrics(song)
+            continue
+
+        if cache[key]:
+            show(current_lines(cache[key], song["position"]))
+        else:
+            show((song["artist"], song["title"], "No synced lyrics found"))
+
+
+def main():
+    if "--here" not in sys.argv[1:]:
+        os.execvp("ghostty", ["ghostty", "--title=Lyrics", "-e",
+                              os.path.abspath(__file__), "--here"])
+
+    fd = sys.stdin.fileno()
+    saved = termios.tcgetattr(fd)
+    sys.stdout.write("\x1b[?1049h\x1b[?25l\x1b[2J")
+    sys.stdout.flush()
+    try:
+        tty.setcbreak(fd)
+        run()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, saved)
+        sys.stdout.write("\x1b_Ga=d,d=A,q=2\x1b\\\x1b[?25h\x1b[?1049l")
+        sys.stdout.flush()
+
+
+if __name__ == "__main__":
+    main()
